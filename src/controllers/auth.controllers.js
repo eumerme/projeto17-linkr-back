@@ -1,17 +1,46 @@
+import jwt from "jsonwebtoken";
 import { STATUS_CODE } from "../enums/statusCode.js";
-import bcrypt from 'bcrypt';
-import * as authRepository from '../repositories/authRepository.js';
+import bcrypt from "bcrypt";
+import * as authRepository from "../repositories/auth.repository.js";
 
-const registerUser = (req, res) => {
-    const { name, password, imageUrl, email } = req.body;
-    try {
-        const passwordHash = bcrypt.hashSync(password, 10);
-        authRepository.register(name, email, passwordHash, imageUrl);
+const registerUser = async (req, res) => {
+	const { name, password, imageUrl, email } = req.body;
+	try {
+		const passwordHash = bcrypt.hashSync(password, 10);
+		await authRepository.register(name, email, passwordHash, imageUrl);
 
-        return res.sendStatus(STATUS_CODE.CREATED);
-    } catch (error) {
-        return res.sendStatus(STATUS_CODE.SERVER_ERROR);
-    }
+		return res.sendStatus(STATUS_CODE.CREATED);
+	} catch (error) {
+		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+	}
 };
 
-export { registerUser };
+const signin = async (req, res) => {
+	const { password } = req.body;
+	const { user } = res.locals;
+	const validPassword = bcrypt.compareSync(password, user.password);
+
+	try {
+		if (!validPassword) {
+			return res.sendStatus(STATUS_CODE.UNAUTHORIZED);
+		}
+
+		const token = jwt.sign({ userId: user.id }, process.env.TOKEN_SECRET, {
+			expiresIn: "2d",
+		});
+
+		const { rows: sessionExists } = await authRepository.selectUserFromSessions(
+			user.id
+		);
+		if (sessionExists.length !== 0) {
+			await authRepository.inactivateToken(sessionExists[0].token);
+		}
+
+		await authRepository.insertUserIntoSessions(user.id, token);
+		return res.status(STATUS_CODE.OK).send({ token });
+	} catch (error) {
+		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+	}
+};
+
+export { registerUser, signin };
