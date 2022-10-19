@@ -37,7 +37,7 @@ async function insertUserIntoSessions(userId, token) {
 
 async function selectUserFromSessions(userId) {
 	return connection.query(
-		`SELECT * FROM ${TABLE.SESSIONS} WHERE "userId" = $1;`,
+		`SELECT * FROM ${TABLE.SESSIONS} WHERE "userId" = $1 AND active = TRUE;`,
 		[userId]
 	);
 }

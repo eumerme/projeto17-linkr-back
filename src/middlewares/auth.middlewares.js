@@ -1,5 +1,5 @@
 import * as authRepository from "../repositories/auth.repository.js";
-import { STATUS_CODE } from "../enums/statusCode.js";
+import { STATUS_CODE } from "../enums/status.code.js";
 import { signUpSchema, signInSchema } from "../schemas/schemas.js";
 
 async function validateRegister(req, res, next) {

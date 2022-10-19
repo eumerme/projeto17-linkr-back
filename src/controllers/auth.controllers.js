@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import { STATUS_CODE } from "../enums/statusCode.js";
+import { STATUS_CODE } from "../enums/status.code.js";
 import bcrypt from "bcrypt";
 import * as authRepository from "../repositories/auth.repository.js";
 
