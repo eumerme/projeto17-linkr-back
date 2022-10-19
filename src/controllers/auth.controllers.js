@@ -37,7 +37,7 @@ const signin = async (req, res) => {
 		}
 
 		await authRepository.insertUserIntoSessions(user.id, token);
-		return res.status(STATUS_CODE.OK).send({ token });
+		return res.status(STATUS_CODE.OK).send({ token, name: user.name });
 	} catch (error) {
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
