@@ -45,4 +45,15 @@ const signin = async (req, res) => {
 	}
 };
 
-export { registerUser, signin };
+async function logout(req, res) {
+	const { token } = res.locals;
+	try {
+		await authRepository.inactivateToken(token);
+
+		return res.sendStatus(200);
+	} catch (error) {
+		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+	}
+}
+
+export { registerUser, signin, logout };
