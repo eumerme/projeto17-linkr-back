@@ -15,4 +15,13 @@ async function publishPost(req, res) {
   }
 }
 
-export { publishPost };
+const listPosts = async (req, res) => {
+  try {
+    const result = await timelineRepository.listPost();
+    return res.status(STATUS_CODE.OK).send(result.rows);
+  } catch (error) {
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+};
+
+export { publishPost, listPosts };

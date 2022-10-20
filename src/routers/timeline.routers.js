@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { publishPost } from "../controllers/timeline.controllers.js";
+import { listPosts, publishPost } from "../controllers/timeline.controllers.js";
 import { validateNewPost } from "../middlewares/timeline.middlewares.js";
 import { tokenValidation } from "../middlewares/token.validation.js";
 
@@ -11,5 +11,7 @@ timelineRouter.post(
   validateNewPost,
   publishPost
 );
+
+timelineRouter.get('/timeline/posts', listPosts);
 
 export { timelineRouter };

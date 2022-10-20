@@ -8,4 +8,18 @@ async function publishNewPost(userId, comment, url) {
   );
 }
 
-export { publishNewPost };
+async function listPost(){
+  return connection.query(
+    `SELECT posts.text, 
+    posts.url,
+    posts.likes,
+    users.name,
+    users."imageUrl"
+    FROM posts
+    JOIN users ON posts."userId" = users.id
+    ORDER BY posts."createdAt" DESC
+    LIMIT 20;`
+  );
+};
+
+export { publishNewPost, listPost };
