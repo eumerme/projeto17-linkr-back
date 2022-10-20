@@ -7,9 +7,10 @@ async function listHashtags() {
 
 async function listPostbyHashtag(text) {
   const newText = `%${text}%`;
-  return connection.query(`SELECT * FROM ${TABLE.POSTS} WHERE text LIKE $1;`, [
-    newText,
-  ]);
+  return connection.query(
+    `SELECT posts.text, posts.url, posts.likes, users.name, users."imageUrl" FROM ${TABLE.POSTS} JOIN ${TABLE.USERS} ON posts."userId" = users.id WHERE text LIKE $1 ORDER BY posts."createdAt" DESC LIMIT 20;`,
+    [newText]
+  );
 }
 
 export { listPostbyHashtag, listHashtags };
