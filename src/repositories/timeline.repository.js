@@ -8,7 +8,7 @@ async function publishNewPost(userId, comment, url) {
   );
 }
 
-async function listPost(){
+async function listPost() {
   return connection.query(
     `SELECT posts.text, 
     posts.url,
@@ -20,6 +20,6 @@ async function listPost(){
     ORDER BY posts."createdAt" DESC
     LIMIT 20;`
   );
-};
+}
 
 export { publishNewPost, listPost };
