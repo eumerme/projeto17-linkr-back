@@ -17,6 +17,7 @@ async function tokenValidation(req, res, next) {
 		}
 
 		res.locals.userId = verifyToken.userId;
+		res.locals.token = token;
 		next();
 	} catch (error) {
 		return res.sendStatus(STATUS_CODE.UNAUTHORIZED);
