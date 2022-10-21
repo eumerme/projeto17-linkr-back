@@ -36,4 +36,15 @@ const updatePost = async (req, res) => {
   }
 };
 
-export { publishPost, listPosts, updatePost };
+const deletePost = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await timelineRepository.deleteFatalPost(id);
+    return res.sendStatus(STATUS_CODE.OK);
+  } catch (error) {
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+};
+
+export { publishPost, listPosts, updatePost, deletePost };

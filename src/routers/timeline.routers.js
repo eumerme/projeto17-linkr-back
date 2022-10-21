@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  deletePost,
   listPosts,
   publishPost,
   updatePost,
@@ -19,5 +20,11 @@ timelineRouter.post(
 timelineRouter.get("/timeline/posts", listPosts);
 
 timelineRouter.put("/timeline/posts/update/:id", tokenValidation, updatePost);
+
+timelineRouter.delete(
+  "/timeline/posts/delete/:id",
+  tokenValidation,
+  deletePost
+);
 
 export { timelineRouter };

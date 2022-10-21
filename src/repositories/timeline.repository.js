@@ -24,10 +24,14 @@ async function listPost() {
 }
 
 async function editPostText(comment, id) {
-  return connection.query(`UPDATE posts SET text = $1 WHERE id = $2;`, [
-    comment,
-    id,
-  ]);
+  return connection.query(
+    `UPDATE ${TABLE.POSTS} SET text = $1 WHERE id = $2;`,
+    [comment, id]
+  );
 }
 
-export { publishNewPost, listPost, editPostText };
+async function deleteFatalPost(id) {
+  return connection.query(`DELETE FROM ${TABLE.POSTS} WHERE id = $1;`, [id]);
+}
+
+export { publishNewPost, listPost, editPostText, deleteFatalPost };
