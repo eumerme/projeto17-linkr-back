@@ -10,7 +10,8 @@ async function publishNewPost(userId, comment, url) {
 
 async function listPost() {
   return connection.query(
-    `SELECT posts.text, 
+    `SELECT posts.text,
+    posts.id, 
     posts.url,
     posts.likes,
     users.name,
@@ -22,4 +23,11 @@ async function listPost() {
   );
 }
 
-export { publishNewPost, listPost };
+async function editPostText(comment, id) {
+  return connection.query(`UPDATE posts SET text = $1 WHERE id = $2;`, [
+    comment,
+    id,
+  ]);
+}
+
+export { publishNewPost, listPost, editPostText };

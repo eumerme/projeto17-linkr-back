@@ -24,4 +24,16 @@ const listPosts = async (req, res) => {
   }
 };
 
-export { publishPost, listPosts };
+const updatePost = async (req, res) => {
+  const { comment } = req.body;
+  const { id } = req.params;
+  try {
+    await timelineRepository.editPostText(comment, id);
+    res.sendStatus(STATUS_CODE.CREATED);
+    return;
+  } catch (error) {
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+};
+
+export { publishPost, listPosts, updatePost };
