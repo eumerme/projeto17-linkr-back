@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { listPosts, publishPost } from "../controllers/timeline.controllers.js";
-import { validateNewPost } from "../middlewares/timeline.middlewares.js";
+import { likes, listPosts, publishPost } from "../controllers/timeline.controllers.js";
+import { validateId, validateNewPost } from "../middlewares/timeline.middlewares.js";
 import { tokenValidation } from "../middlewares/token.validation.js";
 
 const timelineRouter = Router();
@@ -13,5 +13,6 @@ timelineRouter.post(
 );
 
 timelineRouter.get('/timeline/posts', listPosts);
+timelineRouter.post('/timeline/likes', validateId, likes)
 
 export { timelineRouter };

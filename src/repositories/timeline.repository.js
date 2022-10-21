@@ -23,4 +23,10 @@ async function listPost() {
   );
 }
 
-export { publishNewPost, listPost };
+function updateLikes(id, like, type){
+  if(type === 'like') connection.query(`UPDATE posts SET likes = $1 WHERE id = $2;`, [like+1, id]);
+  else connection.query(`UPDATE posts SET likes = $1 WHERE posts.id = $2;`, [like-1, id]);
+}
+
+
+export { publishNewPost, listPost, updateLikes };

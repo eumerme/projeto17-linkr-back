@@ -24,4 +24,18 @@ const listPosts = async (req, res) => {
   }
 };
 
-export { publishPost, listPosts };
+const likes = (req, res) => {
+  const {type, id} = req.body;
+  const {like} = res.locals;
+
+  try {
+
+    timelineRepository.updateLikes(id, like, type);
+
+    return res.sendStatus(STATUS_CODE.OK);
+  } catch (error) {
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+};
+
+export { publishPost, listPosts, likes };
