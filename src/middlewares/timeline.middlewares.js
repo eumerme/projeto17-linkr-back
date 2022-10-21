@@ -17,4 +17,20 @@ async function validateNewPost(req, res, next) {
   }
 }
 
-export { validateNewPost };
+async function validateExistPost(req, res, next) {
+  const { id } = req.params;
+  try {
+    const result = await timelineRepository.findPost(id);
+    if (result.rows.length === 0) {
+      res.sendStatus(STATUS_CODE.NOT_FOUND);
+      return;
+    }
+    next();
+  } catch (error) {
+    console.log(error.message);
+    res.sendStatus(STATUS_CODE.SERVER_ERROR);
+    return;
+  }
+}
+
+export { validateNewPost, validateExistPost };
