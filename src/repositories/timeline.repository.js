@@ -10,7 +10,8 @@ async function publishNewPost(userId, comment, url) {
 
 async function listPost() {
   return connection.query(
-    `SELECT posts.text, 
+    `SELECT posts.id, 
+    posts.text, 
     posts.url,
     posts.likes,
     users.name,

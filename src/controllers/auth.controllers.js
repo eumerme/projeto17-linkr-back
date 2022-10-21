@@ -32,11 +32,13 @@ const signin = async (req, res) => {
 		const { rows: sessionExists } = await authRepository.selectUserFromSessions(
 			user.id
 		);
+
 		if (sessionExists.length !== 0) {
 			await authRepository.inactivateToken(sessionExists[0].token);
 		}
 
 		await authRepository.insertUserIntoSessions(user.id, token);
+		
 		return res
 			.status(STATUS_CODE.OK)
 			.send({ token, name: user.name, image: user.imageUrl });
