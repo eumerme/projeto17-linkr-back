@@ -24,6 +24,29 @@ const listPosts = async (req, res) => {
 	}
 };
 
+const updatePost = async (req, res) => {
+	const { comment } = req.body;
+	const { id } = req.params;
+	try {
+		await timelineRepository.editPostText(comment, id);
+		res.sendStatus(STATUS_CODE.CREATED);
+		return;
+	} catch (error) {
+		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+	}
+};
+
+const deletePost = async (req, res) => {
+	const { id } = req.params;
+
+	try {
+		await timelineRepository.deleteFatalPost(id);
+		return res.sendStatus(STATUS_CODE.OK);
+	} catch (error) {
+		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+	}
+};
+
 const listUsers = async (req, res) => {
 	try {
 		const { rows: users } = await timelineRepository.getUsers();
@@ -34,4 +57,22 @@ const listUsers = async (req, res) => {
 	}
 };
 
-export { publishPost, listPosts, listUsers };
+const listUserPosts = async (req, res) => {
+	const { id } = req.params;
+	try {
+		const { rows: posts } = await timelineRepository.getUserPosts(id);
+		return res.status(STATUS_CODE.OK).send(posts);
+	} catch (error) {
+		console.log(error.message);
+		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+	}
+};
+
+export {
+	publishPost,
+	listPosts,
+	updatePost,
+	deletePost,
+	listUsers,
+	listUserPosts,
+};
