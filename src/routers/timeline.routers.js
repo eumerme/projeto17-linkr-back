@@ -1,39 +1,45 @@
 import { Router } from "express";
 import {
-  deletePost,
-  listPosts,
-  publishPost,
-  updatePost,
+	deletePost,
+	listPosts,
+	publishPost,
+	updatePost,
+	listUsers,
+	listUserPosts,
 } from "../controllers/timeline.controllers.js";
 import {
-  validateExistPost,
-  validateNewPost,
+	validateExistPost,
+	validateNewPost,
 } from "../middlewares/timeline.middlewares.js";
 import { tokenValidation } from "../middlewares/token.validation.js";
 
 const timelineRouter = Router();
 
 timelineRouter.post(
-  "/timeline/publish",
-  tokenValidation,
-  validateNewPost,
-  publishPost
+	"/timeline/publish",
+	tokenValidation,
+	validateNewPost,
+	publishPost
 );
 
 timelineRouter.get("/timeline/posts", listPosts);
 
 timelineRouter.put(
-  "/timeline/posts/update/:id",
-  tokenValidation,
-  validateExistPost,
-  updatePost
+	"/timeline/posts/update/:id",
+	tokenValidation,
+	validateExistPost,
+	updatePost
 );
 
 timelineRouter.delete(
-  "/timeline/posts/delete/:id",
-  tokenValidation,
-  validateExistPost,
-  deletePost
+	"/timeline/posts/delete/:id",
+	tokenValidation,
+	validateExistPost,
+	deletePost
 );
+
+timelineRouter.get("/listusers", tokenValidation, listUsers);
+
+timelineRouter.get("/url/:id", tokenValidation, listUserPosts);
 
 export { timelineRouter };
