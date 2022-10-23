@@ -10,10 +10,10 @@ async function publishNewPost(userId, comment, url) {
 
 async function listPost() {
   return connection.query(
-    `SELECT posts.id, 
-    posts.text, 
+    `SELECT posts.text,
+    posts.id, 
+    posts."userId",
     posts.url,
-    posts.likes,
     users.name,
     users."imageUrl"
     FROM posts
@@ -23,10 +23,26 @@ async function listPost() {
   );
 }
 
-function updateLikes(id, like, type){
-  if(type === 'like') connection.query(`UPDATE posts SET likes = $1 WHERE id = $2;`, [like+1, id]);
-  else connection.query(`UPDATE posts SET likes = $1 WHERE posts.id = $2;`, [like-1, id]);
+function updateLikes(id, userId, type){
+  if(type === 'like') connection.query(`
+    INSERT INTO likes ("userId", "postId") VALUES ($1, $2);
+    `, [userId, id]);
+  else connection.query(`DELETE FROM likes WHERE "userId" = $1;`, [userId]);
 }
 
+async function findPost(id) {
+  return connection.query(`SELECT * FROM ${TABLE.POSTS} WHERE id = $1`, [id]);
+}
 
-export { publishNewPost, listPost, updateLikes };
+async function editPostText(comment, id) {
+  return connection.query(
+    `UPDATE ${TABLE.POSTS} SET text = $1 WHERE id = $2;`,
+    [comment, id]
+  );
+}
+
+async function deleteFatalPost(id) {
+  return connection.query(`DELETE FROM ${TABLE.POSTS} WHERE id = $1;`, [id]);
+}
+
+export { publishNewPost, updateLikes, listPost, findPost, editPostText, deleteFatalPost };

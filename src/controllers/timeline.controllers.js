@@ -25,17 +25,38 @@ const listPosts = async (req, res) => {
 };
 
 const likes = (req, res) => {
-  const {type, id} = req.body;
-  const {like} = res.locals;
+  const {id, type, userId} = req.body;
+  
+  try {
+    timelineRepository.updateLikes(id, userId, type);
+    return res.sendStatus(STATUS_CODE.OK);
+  }catch(error){
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+
+};
+
+const updatePost = async (req, res) => {
+  const { comment } = req.body;
+  const { id } = req.params;
+  try {
+    await timelineRepository.editPostText(comment, id);
+    res.sendStatus(STATUS_CODE.CREATED);
+    return;
+  } catch (error) {
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+};
+
+const deletePost = async (req, res) => {
+  const { id } = req.params;
 
   try {
-
-    timelineRepository.updateLikes(id, like, type);
-
+    await timelineRepository.deleteFatalPost(id);
     return res.sendStatus(STATUS_CODE.OK);
   } catch (error) {
     return res.sendStatus(STATUS_CODE.SERVER_ERROR);
   }
 };
 
-export { publishPost, listPosts, likes };
+export { publishPost, listPosts, updatePost, deletePost, likes };

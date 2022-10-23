@@ -1,6 +1,6 @@
 import { STATUS_CODE } from "../enums/status.code.js";
-import { publishSchema } from "../schemas/schemas.js";
-import {connection} from '../database/db.js'
+import { publishSchema, likesSchema } from "../schemas/schemas.js";
+import {connection} from '../database/db.js';
 
 async function validateNewPost(req, res, next) {
   try {
@@ -17,18 +17,42 @@ async function validateNewPost(req, res, next) {
   }
 }
 
-async function validateId(req, res, next){
-  const {id, type} = req.body;
+async function validateExistPost(req, res, next) {
+  const { id } = req.params;
   try {
-    const existId = (await connection.query(`SELECT posts.likes FROM posts WHERE id = $1`, [id])).rows;
-    if(existId.length === 0) return res.sendStatus(STATUS_CODE.NOT_FOUND);
-    if(type !== 'like' && type !== 'noLike') return res.sendStatus(STATUS_CODE.UNPROCESSABLE_ENTITY);
-
-    res.locals.like = existId[0].likes;
+    const result = await timelineRepository.findPost(id);
+    if (result.rows.length === 0) {
+      res.sendStatus(STATUS_CODE.NOT_FOUND);
+      return;
+    }
     next();
   } catch (error) {
     res.sendStatus(STATUS_CODE.SERVER_ERROR);
+    return;
   }
 }
 
-export { validateNewPost, validateId };
+async function validateLikes(req, res, next){
+ const {userId, type} = req.body;
+  
+  try {
+    const validation = likesSchema.validate(req.body, { abortEarly: false });
+    if (validation.error) {
+      const message = validation.error.details.map((value) => value.message);
+      res.status(STATUS_CODE.UNPROCESSABLE_ENTITY).send(message);
+      return;
+    }
+    const likeExist = ( await connection.query(`
+    SELECT * FROM likes WHERE "userId" = $1;
+    `, [userId])).rows;
+
+    if(likeExist.length !== 0 && type === 'like') return res.sendStatus(STATUS_CODE.CONFLICT);
+    if(likeExist.length === 0 && type === 'noLike') return res.sendStatus(STATUS_CODE.UNPROCESSABLE_ENTITY);
+
+    next();
+  } catch (error) {
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+}
+
+export { validateNewPost, validateExistPost, validateLikes };

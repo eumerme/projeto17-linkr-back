@@ -23,4 +23,10 @@ const publishSchema = Joi.object({
     .required(),
 });
 
-export { signUpSchema, signInSchema, publishSchema };
+const likesSchema = Joi.object({
+  id: Joi.number().required(),
+  userId: Joi.number().required(),
+  type: Joi.string().valid('like', 'noLike').required()
+});
+
+export { signUpSchema, signInSchema, publishSchema, likesSchema };
