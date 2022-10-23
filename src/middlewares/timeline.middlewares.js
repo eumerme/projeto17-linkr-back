@@ -35,7 +35,7 @@ async function validateExistPost(req, res, next) {
 
 async function validateLikes(req, res, next){
  const {userId, type} = req.body;
-  
+
   try {
     const validation = likesSchema.validate(req.body, { abortEarly: false });
     if (validation.error) {
