@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   deletePost,
   likes,
+  listLikes,
   listPosts,
   publishPost,
   updatePost,
@@ -24,6 +25,7 @@ timelineRouter.post(
 
 timelineRouter.get("/timeline/posts", listPosts);
 timelineRouter.post("/timeline/like", validateLikes, likes);
+timelineRouter.get("/timeline/postsLikes/:id", validateExistPost, listLikes);
 
 timelineRouter.put(
   "/timeline/posts/update/:id",

@@ -30,10 +30,6 @@ function updateLikes(id, userId, type){
   else connection.query(`DELETE FROM likes WHERE "userId" = $1;`, [userId]);
 }
 
-async function findPost(id) {
-  return connection.query(`SELECT * FROM ${TABLE.POSTS} WHERE id = $1`, [id]);
-}
-
 async function editPostText(comment, id) {
   return connection.query(
     `UPDATE ${TABLE.POSTS} SET text = $1 WHERE id = $2;`,
@@ -45,4 +41,14 @@ async function deleteFatalPost(id) {
   return connection.query(`DELETE FROM ${TABLE.POSTS} WHERE id = $1;`, [id]);
 }
 
-export { publishNewPost, updateLikes, listPost, findPost, editPostText, deleteFatalPost };
+async function likes(id){
+  return connection.query(`
+    SELECT COUNT(likes."postId") AS likes,
+    json_agg(users.name) AS "likeBy"
+    FROM likes
+    JOIN users ON likes."userId" = users.id
+    WHERE likes."postId" = $1;
+  `, [id]);
+}
+
+export { publishNewPost, updateLikes, listPost, editPostText, deleteFatalPost, likes };

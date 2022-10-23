@@ -20,11 +20,12 @@ async function validateNewPost(req, res, next) {
 async function validateExistPost(req, res, next) {
   const { id } = req.params;
   try {
-    const result = await timelineRepository.findPost(id);
+    const result = await connection.query(`SELECT * FROM posts WHERE posts.id = $1;`, [id]);
     if (result.rows.length === 0) {
       res.sendStatus(STATUS_CODE.NOT_FOUND);
       return;
     }
+    
     next();
   } catch (error) {
     res.sendStatus(STATUS_CODE.SERVER_ERROR);
@@ -54,5 +55,6 @@ async function validateLikes(req, res, next){
     return res.sendStatus(STATUS_CODE.SERVER_ERROR);
   }
 }
+
 
 export { validateNewPost, validateExistPost, validateLikes };
