@@ -25,8 +25,8 @@ const listPostHashtag = async (req, res) => {
 };
 
 const createHashtag = async (req, res) => {
-	console.log("body ", req.body);
 	const { hashtagText } = req.body;
+
 	try {
 		const { rows: hashtagExists } = await hashtagsRepository.selectHashtag(
 			hashtagText
@@ -34,9 +34,8 @@ const createHashtag = async (req, res) => {
 
 		if (hashtagExists.length !== 0) return;
 
-		const { rows: tag } = await hashtagsRepository.insertHashtag(hashtagText);
-		return res.status(STATUS_CODE.OK).send(tag);
-		//return res.sendStatus(STATUS_CODE.OK);
+		await hashtagsRepository.insertHashtag(hashtagText);
+		return res.sendStatus(STATUS_CODE.OK);
 	} catch (error) {
 		res.status(STATUS_CODE.SERVER_ERROR);
 	}

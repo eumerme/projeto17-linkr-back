@@ -18,7 +18,9 @@ async function validateNewPost(req, res, next) {
 }
 
 async function validateExistPost(req, res, next) {
+	console.log("entrou validate");
 	const { id } = req.params;
+	console.log("validade id ", id);
 	try {
 		const result = await timelineRepository.findPost(id);
 		if (result.rows.length === 0) {

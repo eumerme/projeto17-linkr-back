@@ -27,6 +27,8 @@ const listPosts = async (req, res) => {
 const updatePost = async (req, res) => {
 	const { comment } = req.body;
 	const { id } = req.params;
+	console.log("edit id ", id);
+	console.log("edit body ", comment);
 	try {
 		await timelineRepository.editPostText(comment, id);
 		res.sendStatus(STATUS_CODE.CREATED);
@@ -38,7 +40,7 @@ const updatePost = async (req, res) => {
 
 const deletePost = async (req, res) => {
 	const { id } = req.params;
-
+	console.log("delete id ", id);
 	try {
 		await timelineRepository.deleteFatalPost(id);
 		return res.sendStatus(STATUS_CODE.OK);

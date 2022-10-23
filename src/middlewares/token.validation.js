@@ -4,7 +4,8 @@ import * as authRepository from "../repositories/auth.repository.js";
 
 async function tokenValidation(req, res, next) {
 	const token = req.headers.authorization?.replace("Bearer ", "");
-
+	console.log(req);
+	console.log({ token });
 	try {
 		const verifyToken = jwt.verify(token, process.env.TOKEN_SECRET);
 
@@ -18,6 +19,7 @@ async function tokenValidation(req, res, next) {
 
 		res.locals.userId = verifyToken.userId;
 		res.locals.token = token;
+		console.log(res.locals);
 		next();
 	} catch (error) {
 		return res.sendStatus(STATUS_CODE.UNAUTHORIZED);
