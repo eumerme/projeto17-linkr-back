@@ -1,16 +1,19 @@
 import { Router } from "express";
 import {
-	deletePost,
-	listPosts,
-	publishPost,
-	updatePost,
-	listUsers,
-	listUserPosts,
+  deletePost,
+  likes,
+  listLikes,
+  listPosts,
+  publishPost,
+  updatePost,
+  listUsers,
+  listUserPosts
 } from "../controllers/timeline.controllers.js";
 import { checkHashtag } from "../middlewares/hashtags.middleware.js";
 import {
-	validateExistPost,
-	validateNewPost,
+  validateExistPost,
+  validateLikes,
+  validateNewPost,
 } from "../middlewares/timeline.middlewares.js";
 import { tokenValidation } from "../middlewares/token.validation.js";
 
@@ -24,6 +27,8 @@ timelineRouter.post(
 );
 
 timelineRouter.get("/timeline/posts", listPosts);
+timelineRouter.post("/timeline/like", validateLikes, likes);
+timelineRouter.get("/timeline/postsLikes/:id", validateExistPost, listLikes);
 
 timelineRouter.put(
 	"/timeline/posts/update/:id",
