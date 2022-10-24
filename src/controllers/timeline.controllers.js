@@ -49,7 +49,6 @@ const updatePost = async (req, res) => {
 
 const deletePost = async (req, res) => {
   const { id } = req.params;
-
   try {
     await timelineRepository.deleteFatalPost(id);
     return res.sendStatus(STATUS_CODE.OK);
@@ -64,9 +63,28 @@ const listLikes = async (req, res) => {
   try {
     const result = await timelineRepository.likes(id);
     return res.status(STATUS_CODE.OK).send(result.rows);
+  }catch(error){
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+};
+
+const listUsers = async (req, res) => {
+  try {
+    const { rows: users } = await timelineRepository.getUsers();
+    return res.status(STATUS_CODE.OK).send(users);
   } catch (error) {
     return res.sendStatus(STATUS_CODE.SERVER_ERROR);
   }
 };
 
-export { publishPost, listPosts, updatePost, deletePost, likes, listLikes };
+const listUserPosts = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const { rows: posts } = await timelineRepository.getUserPosts(id);
+    return res.status(STATUS_CODE.OK).send(posts);
+  } catch (error) {
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+};
+
+export { publishPost, listPosts, updatePost, deletePost, likes, listLikes, listUsers, listUserPosts };
