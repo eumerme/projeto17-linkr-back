@@ -13,12 +13,9 @@ async function listHashtags() {
 }
 
 async function listPostbyHashtag(text) {
-  const newText = `%#${text}%`;
+  const newText = `%${text}%`;
   return connection.query(
-    `SELECT posts.text, 
-			posts.url, 
-			users.name,
-			users."imageUrl" 
+    `SELECT posts.text, posts."userId", posts.url, users.name, users."imageUrl" 
 		FROM ${TABLE.POSTS} 
 		JOIN ${TABLE.USERS} ON posts."userId" = users.id 
 		WHERE text LIKE $1 
@@ -56,6 +53,7 @@ async function insertHashtagsPosts(postId, hashtagId) {
 }
 
 async function selectHashtagName(id) {
+  console.log("select is post", id);
   return connection.query(
     `SELECT ${TABLE.HASHTAGS}.name
 		FROM "${TABLE.HASHTAGSPOSTS}"
@@ -67,6 +65,7 @@ async function selectHashtagName(id) {
 }
 
 async function selectHashtagsPosts(hashtag) {
+  console.log("select ", hashtag);
   return connection.query(
     `SELECT ${TABLE.HASHTAGS}.name
 			, COUNT("${TABLE.HASHTAGSPOSTS}"."postId") AS amount
