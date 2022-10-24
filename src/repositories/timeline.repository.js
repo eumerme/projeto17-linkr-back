@@ -12,7 +12,7 @@ async function listPost() {
 	return connection.query(
 		`SELECT posts.text,
     posts.id, 
-	posts."userId",
+    posts."userId",
     posts.url,
     users.name,
     users."imageUrl"
@@ -21,6 +21,13 @@ async function listPost() {
     ORDER BY posts."createdAt" DESC
     LIMIT 20;`
 	);
+}
+
+function updateLikes(id, userId, type){
+  if(type === 'like') connection.query(`
+    INSERT INTO likes ("userId", "postId") VALUES ($1, $2);
+    `, [userId, id]);
+  else connection.query(`DELETE FROM likes WHERE "userId" = $1;`, [userId]);
 }
 
 async function findPost(id) {
@@ -36,6 +43,17 @@ async function editPostText(comment, id) {
 
 async function deleteFatalPost(id) {
 	return connection.query(`DELETE FROM ${TABLE.POSTS} WHERE id = $1;`, [id]);
+}
+
+async function likes(id){
+  return connection.query(`
+    SELECT COUNT(likes."postId") AS likes,
+    json_agg(users.name) AS "likeBy",
+    json_agg(likes."userId") AS "users"
+    FROM likes
+    JOIN users ON likes."userId" = users.id
+    WHERE likes."postId" = $1;
+  `, [id]);
 }
 
 async function getUsers() {
@@ -59,12 +77,4 @@ async function getUserPosts(id) {
 	);
 }
 
-export {
-	publishNewPost,
-	listPost,
-	findPost,
-	editPostText,
-	deleteFatalPost,
-	getUsers,
-	getUserPosts,
-};
+export { publishNewPost, updateLikes, listPost, editPostText, deleteFatalPost, likes, findPost, getUserPosts, getUsers };

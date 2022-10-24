@@ -1,6 +1,7 @@
-import * as timelineRepository from "../repositories/timeline.repository.js";
 import { STATUS_CODE } from "../enums/status.code.js";
-import { publishSchema } from "../schemas/schemas.js";
+import { TABLE } from "../enums/tables.js";
+import { publishSchema, likesSchema } from "../schemas/schemas.js";
+import {connection} from '../database/db.js';
 
 async function validateNewPost(req, res, next) {
 	try {
@@ -20,7 +21,7 @@ async function validateNewPost(req, res, next) {
 async function validateExistPost(req, res, next) {
 	const { id } = req.params;
 	try {
-		const result = await timelineRepository.findPost(id);
+		const result = await connection.query(`SELECT * FROM ${TABLE.POSTS} WHERE id = $1`, [id]);
 		if (result.rows.length === 0) {
 			res.sendStatus(STATUS_CODE.NOT_FOUND);
 			return;
@@ -32,4 +33,28 @@ async function validateExistPost(req, res, next) {
 	}
 }
 
-export { validateNewPost, validateExistPost };
+async function validateLikes(req, res, next){
+ const {userId, type} = req.body;
+
+  try {
+    const validation = likesSchema.validate(req.body, { abortEarly: false });
+    if (validation.error) {
+      const message = validation.error.details.map((value) => value.message);
+      res.status(STATUS_CODE.UNPROCESSABLE_ENTITY).send(message);
+      return;
+    }
+    const likeExist = ( await connection.query(`
+    SELECT * FROM likes WHERE "userId" = $1;
+    `, [userId])).rows;
+
+    if(likeExist.length !== 0 && type === 'like') return res.sendStatus(STATUS_CODE.CONFLICT);
+    if(likeExist.length === 0 && type === 'noLike') return res.sendStatus(STATUS_CODE.UNPROCESSABLE_ENTITY);
+
+    next();
+  } catch (error) {
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+}
+
+
+export { validateNewPost, validateExistPost, validateLikes };
