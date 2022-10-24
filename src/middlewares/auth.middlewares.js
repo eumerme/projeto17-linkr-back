@@ -35,6 +35,7 @@ async function validateSigninBody(req, res, next) {
 		res.locals.user = user[0];
 		next();
 	} catch (error) {
+		console.log(error.message);
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
 }

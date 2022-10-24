@@ -7,6 +7,7 @@ import {
 	listUsers,
 	listUserPosts,
 } from "../controllers/timeline.controllers.js";
+import { checkHashtag } from "../middlewares/hashtags.middleware.js";
 import {
 	validateExistPost,
 	validateNewPost,
@@ -35,6 +36,7 @@ timelineRouter.delete(
 	"/timeline/posts/delete/:id",
 	tokenValidation,
 	validateExistPost,
+	checkHashtag,
 	deletePost
 );
 
