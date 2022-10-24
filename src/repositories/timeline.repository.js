@@ -44,7 +44,8 @@ async function deleteFatalPost(id) {
 async function likes(id){
   return connection.query(`
     SELECT COUNT(likes."postId") AS likes,
-    json_agg(users.name) AS "likeBy"
+    json_agg(users.name) AS "likeBy",
+    json_agg(likes."userId") AS "users"
     FROM likes
     JOIN users ON likes."userId" = users.id
     WHERE likes."postId" = $1;
