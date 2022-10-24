@@ -65,6 +65,7 @@ const listLikes = async (req, res) => {
     const result = await timelineRepository.likes(id);
     return res.status(STATUS_CODE.OK).send(result.rows);
   } catch (error) {
+    console.log(error.message);
     return res.sendStatus(STATUS_CODE.SERVER_ERROR);
   }
 };
