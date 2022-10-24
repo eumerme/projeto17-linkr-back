@@ -16,6 +16,7 @@ async function listPostbyHashtag(text) {
 	const newText = `%${text}%`;
 	return connection.query(
 		`SELECT posts.text, 
+			posts."userId",
 			posts.url, 
 			users.name,
 			users."imageUrl" 
@@ -43,7 +44,7 @@ async function selectHashtag(hashtag) {
 
 async function selectPostId(id) {
 	return connection.query(
-		`SELECT id AS "postId" FROM ${TABLE.POSTS} where "userId" = $1 ORDER BY "createdAt" DESC;`,
+		`SELECT id AS "postId" FROM ${TABLE.POSTS} WHERE "userId" = $1 ORDER BY "createdAt" DESC;`,
 		[id]
 	);
 }
