@@ -38,14 +38,10 @@ const updatePost = async (req, res) => {
 
 const deletePost = async (req, res) => {
 	const { id } = req.params;
-	console.log("entrou delete");
-	console.log(id);
 	try {
-		const result = await timelineRepository.deleteFatalPost(id);
-		console.log(result.rows);
+		await timelineRepository.deleteFatalPost(id);
 		return res.sendStatus(STATUS_CODE.OK);
 	} catch (error) {
-		console.log(error.message);
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
 };
