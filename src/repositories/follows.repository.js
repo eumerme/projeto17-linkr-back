@@ -22,4 +22,10 @@ async function unfollow(userId, followeeId) {
 	);
 }
 
-export { selectFollower, follow, unfollow };
+async function checkUserFollows(userId) {
+	return connection.query(`SELECT * FROM follows WHERE "userId" = $1;`, [
+		userId,
+	]);
+}
+
+export { selectFollower, follow, unfollow, checkUserFollows };
