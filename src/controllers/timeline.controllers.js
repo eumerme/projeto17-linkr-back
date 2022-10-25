@@ -89,6 +89,17 @@ const listUserPosts = async (req, res) => {
   }
 };
 
+const newComment = async (req, res) => {
+  const { comment, postId } = req.body;
+  const { userId } = res.locals;
+  try {
+    await timelineRepository.createNewComment(comment, postId, userId);
+    return res.sendStatus(STATUS_CODE.CREATED);
+  } catch (error) {
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+};
+
 export {
   publishPost,
   listPosts,
@@ -98,4 +109,5 @@ export {
   listLikes,
   listUsers,
   listUserPosts,
+  newComment,
 };

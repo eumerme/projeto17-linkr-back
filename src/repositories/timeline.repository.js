@@ -87,6 +87,13 @@ async function getUserPosts(id) {
   );
 }
 
+async function createNewComment(comment, postId, userId) {
+  return connection.query(
+    `INSERT INTO ${TABLE.COMMENTS} (comment, "postId", "userId") VALUES ($1, $2, $3)`,
+    [comment, postId, userId]
+  );
+}
+
 export {
   publishNewPost,
   updateLikes,
@@ -97,4 +104,5 @@ export {
   findPost,
   getUserPosts,
   getUsers,
+  createNewComment,
 };
