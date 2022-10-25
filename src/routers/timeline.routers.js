@@ -28,9 +28,9 @@ timelineRouter.post(
   publishPost
 );
 
-timelineRouter.get("/timeline/posts", listPosts);
-timelineRouter.post("/timeline/like", validateLikes, likes);
-timelineRouter.get("/timeline/postsLikes/:id", validateExistPost, listLikes);
+timelineRouter.get("/timeline/posts", tokenValidation, listPosts);
+timelineRouter.post("/timeline/like", tokenValidation, validateLikes, likes);
+timelineRouter.get("/timeline/postsLikes/:id", tokenValidation, validateExistPost, listLikes);
 
 timelineRouter.put(
   "/timeline/posts/update/:id",
