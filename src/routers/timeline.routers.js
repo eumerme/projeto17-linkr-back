@@ -9,6 +9,7 @@ import {
   listUsers,
   listUserPosts,
   newComment,
+  listComments,
 } from "../controllers/timeline.controllers.js";
 import { checkHashtag } from "../middlewares/hashtags.middleware.js";
 import {
@@ -49,6 +50,8 @@ timelineRouter.delete(
 timelineRouter.get("/listusers", tokenValidation, listUsers);
 
 timelineRouter.get("/url/:id", tokenValidation, listUserPosts);
+
+timelineRouter.get("/timeline/comments/:postId", listComments);
 
 timelineRouter.post("/timeline/newcomment", tokenValidation, newComment);
 

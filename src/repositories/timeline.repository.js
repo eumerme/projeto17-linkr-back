@@ -87,6 +87,13 @@ async function getUserPosts(id) {
   );
 }
 
+async function listPostComments(id) {
+  return connection.query(
+    `SELECT comments.comment, comments."userId", users.name, users."imageUrl" FROM ${TABLE.COMMENTS} JOIN ${TABLE.USERS} ON users.id = comments."userId" JOIN ${TABLE.POSTS} ON users.id = posts."userId" WHERE posts.id = $1 ORDER BY comments."createdAt" DESC;`,
+    [id]
+  );
+}
+
 async function createNewComment(comment, postId, userId) {
   return connection.query(
     `INSERT INTO ${TABLE.COMMENTS} (comment, "postId", "userId") VALUES ($1, $2, $3)`,
@@ -104,5 +111,6 @@ export {
   findPost,
   getUserPosts,
   getUsers,
+  listPostComments,
   createNewComment,
 };
