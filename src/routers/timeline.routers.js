@@ -38,7 +38,6 @@ timelineRouter.get(
 	listPosts
 );
 
-timelineRouter.get("/timeline/posts", tokenValidation, listPosts);
 timelineRouter.post("/timeline/like", tokenValidation, validateLikes, likes);
 timelineRouter.get("/timeline/postsLikes/:id", tokenValidation, validateExistPost, listLikes);
 timelineRouter.post("/timeline/reposts", tokenValidation, validateRepost, newRepost);

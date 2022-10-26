@@ -17,7 +17,7 @@ async function publishPost(req, res) {
 
 const listPosts = async (req, res) => {
 	const { userId, followSomeone } = res.locals;
-
+	console.log(followSomeone);
 	try {
 		if (followSomeone === false) {
 			const { rows: userPosts } = await timelineRepository.getUserPosts(userId);

@@ -14,7 +14,6 @@ async function tokenValidation(req, res, next) {
     if (isValidToken.length === 0) {
       return res.sendStatus(STATUS_CODE.UNAUTHORIZED);
     }
-
     res.locals.userId = verifyToken.userId;
     res.locals.token = token;
     next();
