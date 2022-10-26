@@ -103,8 +103,9 @@ const listUsers = async (req, res) => {
 
 const listUserPosts = async (req, res) => {
   const { id } = req.params;
+  const limit = req.query.limit;
   try {
-    const { rows: posts } = await timelineRepository.getUserPosts(id);
+    const { rows: posts } = await timelineRepository.getUserPosts(id, limit);
     return res.status(STATUS_CODE.OK).send(posts);
   } catch (error) {
     return res.sendStatus(STATUS_CODE.SERVER_ERROR);
