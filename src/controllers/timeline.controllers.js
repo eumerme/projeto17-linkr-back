@@ -80,8 +80,17 @@ const listLikes = async (req, res) => {
 };
 
 const listUsers = async (req, res) => {
+  const { userId } = res.locals;
   try {
-    const { rows: users } = await timelineRepository.getUsers();
+    const { rows: following } = await timelineRepository.listUserFollowing(
+      userId
+    );
+
+    const { rows: notFollowing } =
+      await timelineRepository.listUserNotFollowing();
+
+    const users = [...following, ...notFollowing];
+
     return res.status(STATUS_CODE.OK).send(users);
   } catch (error) {
     return res.sendStatus(STATUS_CODE.SERVER_ERROR);
