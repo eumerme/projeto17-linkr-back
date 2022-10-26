@@ -8,26 +8,37 @@ async function publishNewPost(userId, comment, url) {
 	);
 }
 
-async function listPost() {
+async function listPost(userId) {
 	return connection.query(
 		`SELECT posts.text,
-    posts.id, 
-    posts."userId",
-    posts.url,
-    users.name,
-    users."imageUrl"
-    FROM posts
-    JOIN users ON posts."userId" = users.id
-    ORDER BY posts."createdAt" DESC
-    LIMIT 20;`
+			posts.id, 
+			posts."userId",
+			posts.url,
+			users.name,
+			users."imageUrl"
+		FROM follows 
+		JOIN posts ON follows."followeeId" = posts."userId"
+			OR follows."userId" = posts."userId"
+		JOIN users ON posts."userId" = users.id
+		WHERE follows."userId" = $1
+		ORDER BY posts."createdAt" DESC
+		LIMIT 100;`,
+		[userId]
 	);
 }
 
-function updateLikes(id, userId, type){
-  if(type === 'like') connection.query(`
-    INSERT INTO likes ("userId", "postId") VALUES ($1, $2);
-    `, [userId, id]);
-  else connection.query(`DELETE FROM likes WHERE "userId" = $1;`, [userId]);
+function updateLikes(id, userId, type) {
+	if (type === "like") {
+		connection.query(
+			`INSERT INTO likes ("userId", "postId") VALUES ($1, $2);`,
+			[userId, id]
+		);
+	} else {
+		connection.query(
+			`DELETE FROM likes WHERE "userId" = $1 AND "postId" = $2;`,
+			[userId, id]
+		);
+	}
 }
 
 async function findPost(id) {
@@ -45,15 +56,18 @@ async function deleteFatalPost(id) {
 	return connection.query(`DELETE FROM ${TABLE.POSTS} WHERE id = $1;`, [id]);
 }
 
-async function likes(id){
-  return connection.query(`
+async function likes(id) {
+	return connection.query(
+		`
     SELECT COUNT(likes."postId") AS likes,
     json_agg(users.name) AS "likeBy",
     json_agg(likes."userId") AS "users"
     FROM likes
     JOIN users ON likes."userId" = users.id
     WHERE likes."postId" = $1;
-  `, [id]);
+  `,
+		[id]
+	);
 }
 
 async function getUsers() {
@@ -77,4 +91,30 @@ async function getUserPosts(id) {
 	);
 }
 
-export { publishNewPost, updateLikes, listPost, editPostText, deleteFatalPost, likes, findPost, getUserPosts, getUsers };
+async function listPostComments(id) {
+	return connection.query(
+		`SELECT comments.comment, comments."userId" as "commentUserId", users.name, users."imageUrl", posts."userId" as "postUserId" FROM ${TABLE.COMMENTS} JOIN ${TABLE.USERS} ON users.id = comments."userId" JOIN ${TABLE.POSTS} ON comments."postId" = posts.id WHERE posts.id = $1 ORDER BY comments."createdAt" DESC;`,
+		[id]
+	);
+}
+
+async function createNewComment(comment, postId, userId) {
+	return connection.query(
+		`INSERT INTO ${TABLE.COMMENTS} (comment, "postId", "userId") VALUES ($1, $2, $3)`,
+		[comment, postId, userId]
+	);
+}
+
+export {
+	publishNewPost,
+	updateLikes,
+	listPost,
+	editPostText,
+	deleteFatalPost,
+	likes,
+	findPost,
+	getUserPosts,
+	getUsers,
+	listPostComments,
+	createNewComment,
+};
