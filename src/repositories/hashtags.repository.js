@@ -13,7 +13,7 @@ async function listHashtags() {
 }
 
 async function listPostbyHashtag(text) {
-	const newText = `%${text}%`;
+	const newText = `%#${text}%`;
 	return connection.query(
 		`SELECT posts.id, posts.text, posts."userId", posts.url, users.name, users."imageUrl" 
 		FROM ${TABLE.POSTS} 
