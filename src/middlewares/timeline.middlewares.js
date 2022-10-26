@@ -91,4 +91,25 @@ async function validateRepost(req, res, next){
   }
 };
 
-export { validateNewPost, validateExistPost, validateLikes, validateRepost };
+async function validateRepostId(req, res, next){
+	const {id} = req.params;
+
+	try {
+		const idExist = (await connection.query(
+			`SELECT reposts.*,
+			users.name
+			FROM reposts
+			JOIN users ON users.id=reposts."userId"
+			WHERE reposts.id = $1;`
+		, [id])).rows;
+
+		if(idExist.length === 0) return res.sendStatus(STATUS_CODE.NOT_FOUND);
+		
+		res.locals.data = idExist;
+		next();
+	} catch (error) {
+		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+	}
+};
+
+export { validateNewPost, validateExistPost, validateLikes, validateRepost, validateRepostId };
