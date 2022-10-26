@@ -101,6 +101,20 @@ async function createNewComment(comment, postId, userId) {
   );
 }
 
+async function createNewRepost(postId, userId){
+  return connection.query(
+    `INSERT INTO ${TABLE.REPOSTS} ("userId", "postId") VALUES ($1, $2)`
+  , [userId, postId]);
+};
+
+async function countReposts(id){
+  return connection.query(
+    `SELECT COUNT("postId") AS "countReposts"
+      FROM reposts 
+      WHERE "postId" = $1;`
+  , [id]);
+};
+
 export {
   publishNewPost,
   updateLikes,
@@ -113,4 +127,6 @@ export {
   getUsers,
   listPostComments,
   createNewComment,
+  createNewRepost,
+  countReposts
 };
