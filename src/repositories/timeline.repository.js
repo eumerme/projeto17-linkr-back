@@ -8,21 +8,6 @@ async function publishNewPost(userId, comment, url) {
 	);
 }
 
-/* async function listPost() {
-  return connection.query(
-    `SELECT posts.text,
-    posts.id, 
-    posts."userId",
-    posts.url,
-    users.name,
-    users."imageUrl"
-    FROM posts
-    JOIN users ON posts."userId" = users.id
-    ORDER BY posts."createdAt" DESC
-    LIMIT 20;`
-  );
-} */
-
 async function listPost(userId) {
 	return connection.query(
 		`SELECT posts.text,
@@ -33,6 +18,7 @@ async function listPost(userId) {
 			users."imageUrl"
 		FROM follows 
 		JOIN posts ON follows."followeeId" = posts."userId"
+			OR follows."userId" = posts."userId"
 		JOIN users ON posts."userId" = users.id
 		WHERE follows."userId" = $1
 		ORDER BY posts."createdAt" DESC
