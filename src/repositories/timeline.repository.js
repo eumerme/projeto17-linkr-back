@@ -21,6 +21,7 @@ async function listPost(userId) {
 			OR follows."userId" = posts."userId"
 		JOIN users ON posts."userId" = users.id
 		WHERE follows."userId" = $1
+		GROUP BY posts.id,users.name,users."imageUrl"
 		ORDER BY posts."createdAt" DESC
 		LIMIT 100;`,
 		[userId]
@@ -70,10 +71,6 @@ async function likes(id) {
 	);
 }
 
-async function getUsers() {
-	return connection.query(`SELECT id, name, "imageUrl" FROM ${TABLE.USERS};`);
-}
-
 async function getUserPosts(id) {
 	return connection.query(
 		`SELECT posts.text,
@@ -86,7 +83,7 @@ async function getUserPosts(id) {
 		JOIN users ON posts."userId" = users.id
 		WHERE users.id = $1
 		ORDER BY posts."createdAt" DESC
-		LIMIT 20;`,
+		LIMIT 100;`,
 		[id]
 	);
 }
@@ -105,6 +102,35 @@ async function createNewComment(comment, postId, userId) {
 	);
 }
 
+async function listUserFollowing(userId) {
+	return connection.query(
+		`SELECT users.id,
+			users.name,
+			users."imageUrl",
+			JSON_BUILD_OBJECT('following', TRUE) AS follow
+		FROM follows
+		JOIN users ON follows."followeeId" = users.id
+		WHERE follows."userId" = $1;`,
+		[userId]
+	);
+}
+
+async function listUserNotFollowing() {
+	return connection.query(
+		`SELECT users.id,
+			users.name,
+			users."imageUrl",
+			JSON_BUILD_OBJECT('following', FALSE) AS follow
+		FROM users
+		WHERE users.id NOT IN
+				(SELECT users.id
+					FROM users
+					JOIN follows ON follows."followeeId" = users.ID
+						OR follows."userId" = users.id
+					GROUP BY users.id);`
+	);
+}
+
 export {
 	publishNewPost,
 	updateLikes,
@@ -114,7 +140,9 @@ export {
 	likes,
 	findPost,
 	getUserPosts,
-	getUsers,
+	//	getUsers,
 	listPostComments,
 	createNewComment,
+	listUserFollowing,
+	listUserNotFollowing,
 };
