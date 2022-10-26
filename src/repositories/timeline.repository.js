@@ -21,6 +21,9 @@ async function listPost(userId, limit) {
 			OR follows."userId" = posts."userId"
 		JOIN users ON posts."userId" = users.id
 		WHERE follows."userId" = $1
+    GROUP BY posts.id,
+			users.name,
+			users."imageUrl"
 		ORDER BY posts."createdAt" DESC
 		LIMIT $2;`,
     [userId, limit]
