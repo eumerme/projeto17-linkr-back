@@ -70,10 +70,6 @@ async function likes(id) {
   );
 }
 
-/* async function getUsers() {
-	return connection.query(`SELECT id, name, "imageUrl" FROM ${TABLE.USERS};`);
-} */
-
 async function getUserPosts(id) {
   return connection.query(
     `SELECT posts.text,
@@ -143,7 +139,6 @@ export {
   likes,
   findPost,
   getUserPosts,
-  //	getUsers,
   listPostComments,
   createNewComment,
   listUserFollowing,
