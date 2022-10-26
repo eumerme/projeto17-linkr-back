@@ -8,7 +8,7 @@ async function publishNewPost(userId, comment, url) {
   );
 }
 
-async function listPost(userId) {
+async function listPost(userId, limit) {
   return connection.query(
     `SELECT posts.text,
 			posts.id, 
@@ -22,8 +22,8 @@ async function listPost(userId) {
 		JOIN users ON posts."userId" = users.id
 		WHERE follows."userId" = $1
 		ORDER BY posts."createdAt" DESC
-		LIMIT 100;`,
-    [userId]
+		LIMIT $2;`,
+    [userId, limit]
   );
 }
 
@@ -70,7 +70,7 @@ async function likes(id) {
   );
 }
 
-async function getUserPosts(id) {
+async function getUserPosts(id, limit) {
   return connection.query(
     `SELECT posts.text,
 			posts.id, 
@@ -82,8 +82,8 @@ async function getUserPosts(id) {
 		JOIN users ON posts."userId" = users.id
 		WHERE users.id = $1
 		ORDER BY posts."createdAt" DESC
-		LIMIT 20;`,
-    [id]
+		LIMIT $2;`,
+    [id, limit]
   );
 }
 

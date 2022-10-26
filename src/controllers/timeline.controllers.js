@@ -17,16 +17,20 @@ async function publishPost(req, res) {
 
 const listPosts = async (req, res) => {
   const { userId, followSomeone } = res.locals;
+  const limit = req.query.limit;
 
   try {
     if (followSomeone === false) {
-      const { rows: userPosts } = await timelineRepository.getUserPosts(userId);
+      const { rows: userPosts } = await timelineRepository.getUserPosts(
+        userId,
+        limit
+      );
       return res
         .status(STATUS_CODE.OK)
         .send({ followSomeone, posts: userPosts });
     }
 
-    const { rows: posts } = await timelineRepository.listPost(userId);
+    const { rows: posts } = await timelineRepository.listPost(userId, limit);
     return res.status(STATUS_CODE.OK).send({ followSomeone: true, posts });
   } catch (error) {
     return res.sendStatus(STATUS_CODE.SERVER_ERROR);
