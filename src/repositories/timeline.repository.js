@@ -21,7 +21,9 @@ async function listPost(userId) {
 			OR follows."userId" = posts."userId"
 		JOIN users ON posts."userId" = users.id
 		WHERE follows."userId" = $1
-		GROUP BY posts.id,users.name,users."imageUrl"
+		GROUP BY posts.id,
+			users.name,
+			users."imageUrl"
 		ORDER BY posts."createdAt" DESC
 		LIMIT 100;`,
 		[userId]
@@ -88,10 +90,10 @@ async function getUserPosts(id) {
 	);
 }
 
-async function listPostComments(id) {
+async function listPostComments(userId, postId) {
 	return connection.query(
-		`SELECT comments.comment, comments."userId" as "commentUserId", users.name, users."imageUrl", posts."userId" as "postUserId" FROM ${TABLE.COMMENTS} JOIN ${TABLE.USERS} ON users.id = comments."userId" JOIN ${TABLE.POSTS} ON comments."postId" = posts.id WHERE posts.id = $1 ORDER BY comments."createdAt" DESC;`,
-		[id]
+		`SELECT comments.comment, comments."userId" as "commentUserId", users.name, users."imageUrl", posts."userId" as "postUserId", follows."followeeId" AS "followee" FROM comments JOIN users ON users.id = comments."userId" JOIN posts ON comments."postId" = posts.id FULL JOIN follows ON comments."userId" = (SELECT follows."followeeId" FROM follows JOIN comments ON comments."userId" = follows."followeeId" WHERE follows."userId" = $1 LIMIT 1) WHERE posts.id = $2 ORDER BY comments."createdAt" DESC;`,
+		[userId, postId]
 	);
 }
 
@@ -140,7 +142,6 @@ export {
 	likes,
 	findPost,
 	getUserPosts,
-	//	getUsers,
 	listPostComments,
 	createNewComment,
 	listUserFollowing,
