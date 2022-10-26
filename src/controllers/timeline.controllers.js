@@ -98,6 +98,27 @@ const listUserPosts = async (req, res) => {
 	}
 };
 
+const listComments = async (req, res) => {
+	const { postId } = req.params;
+	try {
+		const result = await timelineRepository.listPostComments(postId);
+		return res.status(STATUS_CODE.OK).send(result.rows);
+	} catch (error) {
+		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+	}
+};
+
+const newComment = async (req, res) => {
+	const { comment, postId } = req.body;
+	const { userId } = res.locals;
+	try {
+		await timelineRepository.createNewComment(comment, postId, userId);
+		return res.sendStatus(STATUS_CODE.CREATED);
+	} catch (error) {
+		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+	}
+};
+
 export {
 	publishPost,
 	listPosts,
@@ -107,4 +128,6 @@ export {
 	listLikes,
 	listUsers,
 	listUserPosts,
+	listComments,
+	newComment,
 };

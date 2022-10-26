@@ -8,6 +8,8 @@ import {
 	updatePost,
 	listUsers,
 	listUserPosts,
+	newComment,
+	listComments,
 } from "../controllers/timeline.controllers.js";
 import { checkHashtag } from "../middlewares/hashtags.middleware.js";
 import {
@@ -26,7 +28,6 @@ timelineRouter.post(
 	validateNewPost,
 	publishPost
 );
-
 timelineRouter.get(
 	"/timeline/posts",
 	tokenValidation,
@@ -35,14 +36,12 @@ timelineRouter.get(
 );
 timelineRouter.post("/timeline/like", validateLikes, likes);
 timelineRouter.get("/timeline/postsLikes/:id", validateExistPost, listLikes);
-
 timelineRouter.put(
 	"/timeline/posts/update/:id",
 	tokenValidation,
 	validateExistPost,
 	updatePost
 );
-
 timelineRouter.delete(
 	"/timeline/posts/delete/:id",
 	tokenValidation,
@@ -50,9 +49,9 @@ timelineRouter.delete(
 	checkHashtag,
 	deletePost
 );
-
 timelineRouter.get("/listusers", tokenValidation, listUsers);
-
 timelineRouter.get("/url/:id", tokenValidation, listUserPosts);
+timelineRouter.get("/timeline/comments/:postId", listComments);
+timelineRouter.post("/timeline/newcomment", tokenValidation, newComment);
 
 export { timelineRouter };
