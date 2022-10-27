@@ -14,12 +14,8 @@ const listHashtags = async (req, res) => {
 
 const listPostHashtag = async (req, res) => {
   const { hashtagName } = req.params;
-  const limit = req.query.limit;
   try {
-    const result = await hashtagsRepository.listPostbyHashtag(
-      hashtagName,
-      limit
-    );
+    const result = await hashtagsRepository.listPostbyHashtag(hashtagName);
     res.status(STATUS_CODE.OK).send(result.rows);
     return;
   } catch (error) {
