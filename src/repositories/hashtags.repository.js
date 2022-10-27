@@ -12,16 +12,16 @@ async function listHashtags() {
 `);
 }
 
-async function listPostbyHashtag(text) {
-	const newText = `%#${text}%`;
+async function listPostbyHashtag(text, limit) {
+	const newText = `#%${text}%`;
 	return connection.query(
 		`SELECT posts.id, posts.text, posts."userId", posts.url, users.name, users."imageUrl" 
 		FROM ${TABLE.POSTS} 
 		JOIN ${TABLE.USERS} ON posts."userId" = users.id 
 		WHERE text LIKE $1 
 		ORDER BY posts."createdAt" DESC 
-		LIMIT 20;`,
-		[newText]
+		LIMIT $2;`,
+		[newText, limit]
 	);
 }
 
