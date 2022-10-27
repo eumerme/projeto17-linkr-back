@@ -127,8 +127,7 @@ async function listUserNotFollowing() {
 		WHERE users.id NOT IN
 				(SELECT users.id
 					FROM users
-					JOIN follows ON follows."followeeId" = users.ID
-						OR follows."userId" = users.id
+					JOIN follows ON follows."followeeId" = users.id
 					GROUP BY users.id);`
   );
 }
