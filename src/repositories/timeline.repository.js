@@ -14,6 +14,7 @@ async function listPost(userId) {
 			posts.id, 
 			posts."userId",
 			posts.url,
+      posts."createdAt",
 			users.name,
 			users."imageUrl"
 		FROM follows 
@@ -130,10 +131,18 @@ async function listUserNotFollowing() {
   );
 }
 
+async function listPostInterval(limit) {
+  return connection.query(
+    `SELECT COUNT(id) AS "allPosts" FROM posts WHERE "createdAt" > $1;`,
+    [limit]
+  );
+}
+
 export {
   publishNewPost,
   updateLikes,
   listPost,
+  listPostInterval,
   editPostText,
   deleteFatalPost,
   likes,

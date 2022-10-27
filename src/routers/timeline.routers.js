@@ -10,6 +10,7 @@ import {
   listUserPosts,
   newComment,
   listComments,
+  listNewPosts,
 } from "../controllers/timeline.controllers.js";
 import { checkHashtag } from "../middlewares/hashtags.middleware.js";
 import {
@@ -53,5 +54,11 @@ timelineRouter.get("/listusers", tokenValidation, listUsers);
 timelineRouter.get("/url/:id", tokenValidation, listUserPosts);
 timelineRouter.get("/timeline/comments/:postId", tokenValidation, listComments);
 timelineRouter.post("/timeline/newcomment", tokenValidation, newComment);
+timelineRouter.get(
+  "/timeline/setinterval",
+  tokenValidation,
+  validateFollows,
+  listNewPosts
+);
 
 export { timelineRouter };
