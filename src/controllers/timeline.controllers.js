@@ -59,7 +59,8 @@ const updatePost = async (req, res) => {
 const deletePost = async (req, res) => {
   const { id } = req.params;
   try {
-    await timelineRepository.deleteFatalPost(id);
+    const resultId = await timelineRepository.deleteFatalPost(id);
+    if(resultId !== null) timelineRepository.deteleRepost(resultId);
     return res.sendStatus(STATUS_CODE.OK);
   } catch (error) {
     console.log(error.message);
