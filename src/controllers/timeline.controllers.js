@@ -17,16 +17,46 @@ async function publishPost(req, res) {
 
 const listPosts = async (req, res) => {
   const { userId, followSomeone } = res.locals;
-
   try {
     if (followSomeone === false) {
       const { rows: userPosts } = await timelineRepository.getUserPosts(userId);
+      const { rows: getUserReposts } = await timelineRepository.getUserReposts(userId);
+      const posts = userPosts.concat(getUserReposts);
+      
+      posts.forEach((element, index) => {
+        let max = index;
+        for(let i=index+1; i<posts.length; i++){
+          if(posts[i].createdAt > posts[max].createdAt) max = i;
+        }
+        if(max !== index){
+          let tmp = posts[index]; 
+          posts[index] = posts[max];
+          posts[max] = tmp;
+        }
+      });
+      
       return res
         .status(STATUS_CODE.OK)
-        .send({ followSomeone, posts: userPosts });
+        .send({ followSomeone, posts: posts });
     }
 
-    const { rows: posts } = await timelineRepository.listPost(userId);
+    const { rows: Posts } = await timelineRepository.listPost(userId);
+    const { rows: reposts} = await timelineRepository.getListRepost(userId);
+
+    const posts = Posts.concat(reposts);
+      
+    posts.forEach((element, index) => {
+      let max = index;
+      for(let i=index+1; i<posts.length; i++){
+        if(posts[i].createdAt > posts[max].createdAt) max = i;
+      }
+      if(max !== index){
+        let tmp = posts[index]; 
+        posts[index] = posts[max];
+        posts[max] = tmp;
+      }
+    });
+
     return res.status(STATUS_CODE.OK).send({ followSomeone: true, posts });
   } catch (error) {
     return res.sendStatus(STATUS_CODE.SERVER_ERROR);
@@ -59,13 +89,22 @@ const updatePost = async (req, res) => {
 const deletePost = async (req, res) => {
   const { id } = req.params;
   try {
-    const resultId = await timelineRepository.deleteFatalPost(id);
-    if(resultId !== null) timelineRepository.deteleRepost(resultId);
+    timelineRepository.deleteFatalPost(id);
     return res.sendStatus(STATUS_CODE.OK);
   } catch (error) {
     return res.sendStatus(STATUS_CODE.SERVER_ERROR);
   }
 };
+
+const deleteReposts = async (req, res) => {
+  const { id }= req.params;
+  try {
+    timelineRepository.deteleRepost(id);
+    return res.sendStatus(STATUS_CODE.OK);
+  } catch (error) {
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+}
 
 const listLikes = async (req, res) => {
   const { id } = req.params;
@@ -150,14 +189,6 @@ const getReposts = async (req, res) => {
   }
 }
 
-const getRepostsById = async (req, res) => {
-  const {data} = res.locals;
-  try {
-    return res.status(STATUS_CODE.OK).send(data[0]);
-  } catch (error) {
-    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
-  }
-};
 
 const listNewPosts = async (req, res) => {
   const { userId, followSomeone } = res.locals;
@@ -177,6 +208,7 @@ const listNewPosts = async (req, res) => {
   }
 };
 
+
 export {
   publishPost,
   listPosts,
@@ -191,5 +223,5 @@ export {
   newComment,
   newRepost,
   getReposts,
-  getRepostsById
+  deleteReposts
 };
