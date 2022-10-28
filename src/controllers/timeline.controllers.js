@@ -63,7 +63,6 @@ const deletePost = async (req, res) => {
     if(resultId !== null) timelineRepository.deteleRepost(resultId);
     return res.sendStatus(STATUS_CODE.OK);
   } catch (error) {
-    console.log(error.message);
     return res.sendStatus(STATUS_CODE.SERVER_ERROR);
   }
 };
