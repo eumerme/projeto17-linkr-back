@@ -56,7 +56,10 @@ async function editPostText(comment, id) {
 }
 
 async function deleteFatalPost(id) {
-  return connection.query(`DELETE FROM ${TABLE.POSTS} WHERE id = $1;`, [id]);
+  await connection.query(`DELETE FROM ${TABLE.LIKES} WHERE "postId" = $1`, [id]); 
+  await connection.query(`DELETE FROM ${TABLE.COMMENTS} WHERE "postId" = $1`, [id]); 
+  await connection.query(`DELETE FROM ${TABLE.REPOSTS} WHERE "postId" = $1`, [id]); 
+  await connection.query(`DELETE FROM ${TABLE.POSTS} WHERE id = $1;`, [id]);
 }
 
 async function deteleRepost(id){
