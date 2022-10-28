@@ -3,7 +3,7 @@ import * as followsRepository from "../repositories/follows.repository.js";
 
 async function validateFollows(req, res, next) {
 	const { userId } = res.locals;
-
+	
 	try {
 		const { rows: result } = await followsRepository.checkUserFollows(userId);
 

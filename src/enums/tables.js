@@ -5,6 +5,8 @@ const TABLE = Object.freeze({
   POSTS: "posts",
   HASHTAGSPOSTS: "hashtagsPosts",
   COMMENTS: "comments",
+  LIKES: "likes",
+  REPOSTS: "reposts"
 });
 
 export { TABLE };
