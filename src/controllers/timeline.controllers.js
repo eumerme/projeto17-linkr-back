@@ -17,16 +17,46 @@ async function publishPost(req, res) {
 
 const listPosts = async (req, res) => {
   const { userId, followSomeone } = res.locals;
-
   try {
     if (followSomeone === false) {
       const { rows: userPosts } = await timelineRepository.getUserPosts(userId);
+      const { rows: getUserReposts } = await timelineRepository.getUserReposts(userId);
+      const posts = userPosts.concat(getUserReposts);
+      
+      posts.forEach((element, index) => {
+        let max = index;
+        for(let i=index+1; i<posts.length; i++){
+          if(posts[i].createdAt > posts[max].createdAt) max = i;
+        }
+        if(max !== index){
+          let tmp = posts[index]; 
+          posts[index] = posts[max];
+          posts[max] = tmp;
+        }
+      });
+      
       return res
         .status(STATUS_CODE.OK)
-        .send({ followSomeone, posts: userPosts });
+        .send({ followSomeone, posts: posts });
     }
 
-    const { rows: posts } = await timelineRepository.listPost(userId);
+    const { rows: Posts } = await timelineRepository.listPost(userId);
+    const { rows: reposts} = await timelineRepository.getListRepost(userId);
+
+    const posts = Posts.concat(reposts);
+      
+    posts.forEach((element, index) => {
+      let max = index;
+      for(let i=index+1; i<posts.length; i++){
+        if(posts[i].createdAt > posts[max].createdAt) max = i;
+      }
+      if(max !== index){
+        let tmp = posts[index]; 
+        posts[index] = posts[max];
+        posts[max] = tmp;
+      }
+    });
+
     return res.status(STATUS_CODE.OK).send({ followSomeone: true, posts });
   } catch (error) {
     return res.sendStatus(STATUS_CODE.SERVER_ERROR);
@@ -177,6 +207,15 @@ const listNewPosts = async (req, res) => {
   }
 };
 
+const Test = async (req, res) => {
+  try {
+    const result = await timelineRepository.listTest();
+    return res.status(STATUS_CODE.OK).send(result.rows);  
+  } catch (error) {
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+};
+
 export {
   publishPost,
   listPosts,
@@ -191,5 +230,6 @@ export {
   newComment,
   newRepost,
   getReposts,
-  getRepostsById
+  getRepostsById,
+  Test
 };

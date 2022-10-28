@@ -13,7 +13,6 @@ async function listPost(userId) {
     `SELECT posts.text,
 			posts.id, 
 			posts."userId",
-      posts."repostBy",
 			posts.url,
       posts."createdAt",
 			users.name,
@@ -92,8 +91,8 @@ async function getUserPosts(id) {
     `SELECT posts.text,
 			posts.id, 
 			posts."userId",
-      posts."repostBy",
 			posts.url,
+      posts."createdAt",
 			users.name,
 			users."imageUrl"
 		FROM posts
@@ -185,6 +184,44 @@ async function listPostInterval(limit) {
   );
 }
 
+async function getUserReposts(id){
+  return connection.query(`
+    SELECT reposts.*, 
+    "u1".name AS "nameRepost",
+    "u1"."imageUrl" AS "imageUrl",
+    posts.text,
+    posts."userId" AS "userPost",
+    posts.url,
+    "u2".name AS "namePost"
+    FROM reposts
+    JOIN users "u1" ON reposts."userId"="u1".id
+    JOIN posts ON reposts."postId"=posts.id
+    JOIN users "u2" ON posts."userId"="u2".id
+    WHERE "u1".id = $1
+    ORDER BY reposts."createdAt" DESC;
+  `, [id]);
+}
+
+
+async function getListRepost(id){
+  return connection.query(`
+    SELECT reposts.*, 
+    "u1".name AS "nameRepost",
+    "u1"."imageUrl" AS "imageUrl",
+    posts.text,
+    posts."userId" AS "userPost",
+    posts.url,
+    "u2".name AS "namePost"
+    FROM follows 
+    JOIN reposts ON follows."followeeId" = reposts."userId"
+    OR follows."userId" = reposts."userId"
+    JOIN users "u1" ON reposts."userId"="u1".id
+    JOIN posts ON reposts."postId"=posts.id
+    JOIN users "u2" ON posts."userId"="u2".id
+    WHERE "u1".id = $1
+    ORDER BY reposts."createdAt" DESC;
+  `, [id]);
+};
 
 export {
   publishNewPost,
@@ -202,5 +239,7 @@ export {
   countReposts,
   listUserFollowing,
   listUserNotFollowing,
-  deteleRepost
+  deteleRepost,
+  getUserReposts,
+  getListRepost
 };
