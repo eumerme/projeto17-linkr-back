@@ -92,6 +92,7 @@ async function getUserPosts(id) {
     `SELECT posts.text,
 			posts.id, 
 			posts."userId",
+      posts."repostBy",
 			posts.url,
 			users.name,
 			users."imageUrl"
