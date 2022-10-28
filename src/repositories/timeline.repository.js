@@ -15,6 +15,7 @@ async function listPost(userId) {
 			posts."userId",
       posts."repostBy",
 			posts.url,
+      posts."createdAt",
 			users.name,
 			users."imageUrl"
 		FROM follows 
@@ -22,8 +23,10 @@ async function listPost(userId) {
 			OR follows."userId" = posts."userId"
 		JOIN users ON posts."userId" = users.id
 		WHERE follows."userId" = $1
-		ORDER BY posts."createdAt" DESC
-		LIMIT 100;`,
+    GROUP BY posts.id,
+			users.name,
+			users."imageUrl"
+		ORDER BY posts."createdAt" DESC;`,
     [userId]
   );
 }
@@ -95,8 +98,7 @@ async function getUserPosts(id) {
 		FROM posts
 		JOIN users ON posts."userId" = users.id
 		WHERE users.id = $1
-		ORDER BY posts."createdAt" DESC
-		LIMIT 20;`,
+		ORDER BY posts."createdAt" DESC;`,
     [id]
   );
 }
@@ -138,8 +140,7 @@ async function listUserNotFollowing() {
 		WHERE users.id NOT IN
 				(SELECT users.id
 					FROM users
-					JOIN follows ON follows."followeeId" = users.ID
-						OR follows."userId" = users.id
+					JOIN follows ON follows."followeeId" = users.id
 					GROUP BY users.id);`
   );
 }
@@ -176,10 +177,19 @@ async function countReposts(id){
   , [id]);
 };
 
+async function listPostInterval(limit) {
+  return connection.query(
+    `SELECT COUNT(id) AS "allPosts" FROM posts WHERE "createdAt" > $1;`,
+    [limit]
+  );
+}
+
+
 export {
   publishNewPost,
   updateLikes,
   listPost,
+  listPostInterval,
   editPostText,
   deleteFatalPost,
   likes,

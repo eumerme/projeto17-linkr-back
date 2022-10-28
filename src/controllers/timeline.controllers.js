@@ -159,6 +159,24 @@ const getRepostsById = async (req, res) => {
   }
 };
 
+const listNewPosts = async (req, res) => {
+  const { userId, followSomeone } = res.locals;
+
+  try {
+    if (followSomeone === false) {
+      const { rows: userPosts } = await timelineRepository.getUserPosts(userId);
+      return res
+        .status(STATUS_CODE.OK)
+        .send({ followSomeone, posts: userPosts });
+    }
+
+    const { rows: posts } = await timelineRepository.listPost(userId);
+    return res.status(STATUS_CODE.OK).send({ followSomeone: true, posts });
+  } catch (error) {
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+};
+
 export {
   publishPost,
   listPosts,
@@ -169,6 +187,7 @@ export {
   listUsers,
   listUserPosts,
   listComments,
+  listNewPosts,
   newComment,
   newRepost,
   getReposts,
