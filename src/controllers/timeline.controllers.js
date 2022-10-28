@@ -89,13 +89,22 @@ const updatePost = async (req, res) => {
 const deletePost = async (req, res) => {
   const { id } = req.params;
   try {
-    const resultId = await timelineRepository.deleteFatalPost(id);
-    if(resultId !== null) timelineRepository.deteleRepost(resultId);
+    timelineRepository.deleteFatalPost(id);
     return res.sendStatus(STATUS_CODE.OK);
   } catch (error) {
     return res.sendStatus(STATUS_CODE.SERVER_ERROR);
   }
 };
+
+const deleteReposts = async (req, res) => {
+  const { id }= req.params;
+  try {
+    timelineRepository.deteleRepost(id);
+    return res.sendStatus(STATUS_CODE.OK);
+  } catch (error) {
+    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+  }
+}
 
 const listLikes = async (req, res) => {
   const { id } = req.params;
@@ -180,14 +189,6 @@ const getReposts = async (req, res) => {
   }
 }
 
-const getRepostsById = async (req, res) => {
-  const {data} = res.locals;
-  try {
-    return res.status(STATUS_CODE.OK).send(data[0]);
-  } catch (error) {
-    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
-  }
-};
 
 const listNewPosts = async (req, res) => {
   const { userId, followSomeone } = res.locals;
@@ -207,14 +208,6 @@ const listNewPosts = async (req, res) => {
   }
 };
 
-const Test = async (req, res) => {
-  try {
-    const result = await timelineRepository.listTest();
-    return res.status(STATUS_CODE.OK).send(result.rows);  
-  } catch (error) {
-    return res.sendStatus(STATUS_CODE.SERVER_ERROR);
-  }
-};
 
 export {
   publishPost,
@@ -230,6 +223,5 @@ export {
   newComment,
   newRepost,
   getReposts,
-  getRepostsById,
-  Test
+  deleteReposts
 };

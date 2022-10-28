@@ -12,9 +12,8 @@ import {
   listComments,
   newRepost,
   getReposts,
-  getRepostsById,
   listNewPosts,
-  Test,
+  deleteReposts,
 } from "../controllers/timeline.controllers.js";
 import { checkHashtag } from "../middlewares/hashtags.middleware.js";
 import {
@@ -46,8 +45,7 @@ timelineRouter.post("/timeline/like", tokenValidation, validateLikes, likes);
 timelineRouter.get("/timeline/postsLikes/:id", tokenValidation, validateExistPost, listLikes);
 timelineRouter.post("/timeline/reposts", tokenValidation, validateRepost, newRepost);
 timelineRouter.get("/timeline/reposts/:id", tokenValidation, validateExistPost, getReposts);
-timelineRouter.get("/timeline/repost/:id", tokenValidation, validateRepostId, getRepostsById);
-timelineRouter.get("/teste", Test);
+timelineRouter.delete("/timeline/reposts/delete/:id", tokenValidation, validateRepostId, deleteReposts);
 
 timelineRouter.put(
   "/timeline/posts/update/:id",
