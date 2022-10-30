@@ -1,8 +1,8 @@
 import Router from "express";
-import { authRouter } from "./auth.routers.js";
-import { hashtagsRouter } from "./hashtags.routers.js";
-import { timelineRouter } from "./timeline.routers.js";
-import { followsRouter } from "./follows.routers.js";
+import { authRouter } from "./auth.router.js";
+import { hashtagsRouter } from "./hashtags.router.js";
+import { timelineRouter } from "./timeline.router.js";
+import { followsRouter } from "./follows.router.js";
 
 const router = Router();
 

@@ -3,11 +3,12 @@ import { STATUS_CODE } from "../enums/status.code.js";
 import bcrypt from "bcrypt";
 import * as authRepository from "../repositories/auth.repository.js";
 
-const registerUser = async (req, res) => {
+const signup = async (req, res) => {
 	const { name, password, imageUrl, email } = req.body;
 	try {
 		const passwordHash = bcrypt.hashSync(password, 10);
-		await authRepository.register(name, email, passwordHash, imageUrl);
+
+		await authRepository.insertUser(name, email, passwordHash, imageUrl);
 
 		return res.sendStatus(STATUS_CODE.CREATED);
 	} catch (error) {
@@ -29,14 +30,12 @@ const signin = async (req, res) => {
 			expiresIn: "2d",
 		});
 
-		const { rows: sessionExists } = await authRepository.selectUserFromSessions(
-			user.id
-		);
+		const { rows: sessionExists } = await authRepository.selectSession(user.id);
 		if (sessionExists.length !== 0) {
-			await authRepository.inactivateToken(sessionExists[0].token);
+			await authRepository.inactivateSession(sessionExists[0].token);
 		}
 
-		await authRepository.insertUserIntoSessions(user.id, token);
+		await authRepository.createSession(user.id, token);
 		return res
 			.status(STATUS_CODE.OK)
 			.send({ token, id: user.id, name: user.name, image: user.imageUrl });
@@ -48,12 +47,12 @@ const signin = async (req, res) => {
 async function logout(req, res) {
 	const { token } = res.locals;
 	try {
-		await authRepository.inactivateToken(token);
+		await authRepository.inactivateSession(token);
 
-		return res.sendStatus(200);
+		return res.sendStatus(STATUS_CODE.OK);
 	} catch (error) {
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
 }
 
-export { registerUser, signin, logout };
+export { signup, signin, logout };
