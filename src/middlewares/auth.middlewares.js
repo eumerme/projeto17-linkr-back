@@ -23,19 +23,4 @@ async function userValidation(req, res, next) {
 	next();
 }
 
-async function urlValidation(req, res, next) {
-	const { imageUrl } = req.body;
-	const validUrl =
-		imageUrl.substring(0, 7) === "http://" ||
-		imageUrl.substring(0, 8) === "https://";
-
-	if (!validUrl) {
-		return res
-			.status(STATUS_CODE.UNPROCESSABLE_ENTITY)
-			.send({ message: `"url" must be a valid URL` });
-	}
-
-	next();
-}
-
-export { userValidation, urlValidation };
+export { userValidation };
