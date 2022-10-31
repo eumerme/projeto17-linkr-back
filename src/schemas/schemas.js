@@ -11,20 +11,20 @@ const schemas = {
 		email: Joi.string().trim().email().required(),
 		password: Joi.string().trim().min(3).required(),
 	}),
+	publish: Joi.object().keys({
+		comment: Joi.string().trim().required(),
+		url: Joi.string().trim().required(),
+	}),
 	/* paramsId: Joi.object().keys({
 		id: Joi.number().positive().integer(),
 	}), */
 };
 
-const publishSchema = Joi.object({
-	comment: Joi.string().required(),
-	url: Joi.string()
-		.regex(
-			/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/
-		)
-		.required(),
+/* const publishSchema = Joi.object({
+	comment: Joi.string().trim().required(),
+	url: Joi.string().trim().required(),
 });
-
+ */
 const likesSchema = Joi.object({
 	id: Joi.number().required(),
 	userId: Joi.number().required(),
@@ -36,4 +36,4 @@ const repostsSchema = Joi.object({
 	userId: Joi.number().required(),
 });
 
-export { publishSchema, likesSchema, repostsSchema, schemas };
+export { /* publishSchema, */ likesSchema, repostsSchema, schemas };
