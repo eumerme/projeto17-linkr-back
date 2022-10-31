@@ -1,5 +1,6 @@
 import { STATUS_CODE } from "../enums/status.code.js";
 import * as timelineRepository from "../repositories/timeline.repository.js";
+import * as postsRepository from "../repositories/posts.repository.js";
 
 const likes = (req, res) => {
 	const { id, type, userId } = req.body;
@@ -61,6 +62,7 @@ const listUsers = async (req, res) => {
 
 		return res.status(STATUS_CODE.OK).send(users);
 	} catch (error) {
+		console.log("listUser url-id ", error.message);
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
 };
@@ -68,9 +70,11 @@ const listUsers = async (req, res) => {
 const listUserPosts = async (req, res) => {
 	const { id } = req.params;
 	try {
-		const { rows: posts } = await timelineRepository.getUserPosts(id);
+		const { rows: posts } = await postsRepository.listUserPosts(id);
 		return res.status(STATUS_CODE.OK).send(posts);
 	} catch (error) {
+		console.log("listUserPost url-id ", error.message);
+
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
 };
