@@ -26,7 +26,7 @@ async function editPostText(comment, id) {
 	);
 }
 
-async function deleteFatalPost(id) {
+/* async function deleteFatalPost(id) {
 	connection.query(`DELETE FROM ${TABLE.LIKES} WHERE "postId" = $1;`, [id]);
 	const result = (
 		await connection.query(
@@ -47,7 +47,7 @@ async function deteleRepost(id) {
     DELETE FROM reposts WHERE id = $1;`,
 		[id]
 	);
-}
+} */
 
 async function likes(id) {
 	return connection.query(
@@ -153,7 +153,7 @@ export {
 	updateLikes,
 	listPostInterval,
 	editPostText,
-	deleteFatalPost,
+	/* 	deleteFatalPost, */
 	likes,
 	findPost,
 	listPostComments,
@@ -162,5 +162,5 @@ export {
 	countReposts,
 	listUserFollowing,
 	listUserNotFollowing,
-	deteleRepost,
+	/* 	deteleRepost, */
 };

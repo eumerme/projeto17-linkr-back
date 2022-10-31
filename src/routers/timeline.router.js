@@ -1,6 +1,6 @@
 import { Router } from "express";
 import {
-	deletePost,
+	/* 	deletePost, */
 	likes,
 	listLikes,
 	updatePost,
@@ -13,20 +13,20 @@ import {
 	getRepostsById,
 	listNewPosts,
 } from "../controllers/timeline.controllers.js";
-import { checkHashtag } from "../middlewares/hashtags.middleware.js";
+/* import { checkHashtag } from "../middlewares/hashtags.middleware.js";
 import {
 	validateExistPost,
 	validateLikes,
 	validateRepost,
 	validateRepostId,
-} from "../middlewares/timeline.middlewares.js";
+} from "../middlewares/timeline.middlewares.js";*/
 import { tokenValidation } from "../middlewares/token.validation.js";
 import { validateFollows } from "../middlewares/follows.middleware.js";
 import { schemasValidation } from "../middlewares/schemas.validation.js";
 
 const timelineRouter = Router();
 
-timelineRouter.post("/timeline/like", tokenValidation, validateLikes, likes);
+/* timelineRouter.post("/timeline/like", tokenValidation, validateLikes, likes);
 timelineRouter.get(
 	"/timeline/postsLikes/:id",
 	tokenValidation,
@@ -50,21 +50,21 @@ timelineRouter.get(
 	tokenValidation,
 	validateRepostId,
 	getRepostsById
-);
+); */
 
 timelineRouter.put(
 	"/timeline/posts/update/:id",
 	tokenValidation,
-	validateExistPost,
+	/* validateExistPost, */
 	updatePost
 );
-timelineRouter.delete(
+/* timelineRouter.delete(
 	"/timeline/posts/delete/:id",
 	tokenValidation,
 	validateExistPost,
 	checkHashtag,
 	deletePost
-);
+); */
 timelineRouter.get("/listusers", tokenValidation, listUsers);
 timelineRouter.get("/url/:id", tokenValidation, listUserPosts);
 timelineRouter.get("/timeline/comments/:postId", tokenValidation, listComments);

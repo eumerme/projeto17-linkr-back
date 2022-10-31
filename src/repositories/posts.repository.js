@@ -59,4 +59,12 @@ async function listAllPosts(userId) {
 	);
 }
 
-export { insertPost, listUserPosts, listAllPosts };
+async function selectPostById(id) {
+	return connection.query(`SELECT * FROM ${TABLE.POSTS} WHERE id = $1`, [id]);
+}
+
+async function deletePost(id) {
+	return connection.query(`DELETE FROM ${TABLE.POSTS} WHERE id = $1;`, [id]);
+}
+
+export { insertPost, listUserPosts, listAllPosts, selectPostById, deletePost };

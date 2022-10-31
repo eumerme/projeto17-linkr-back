@@ -24,7 +24,7 @@ const updatePost = async (req, res) => {
 	}
 };
 
-const deletePost = async (req, res) => {
+/* const deletePost = async (req, res) => {
 	const { id } = req.params;
 	try {
 		const resultId = await timelineRepository.deleteFatalPost(id);
@@ -33,7 +33,7 @@ const deletePost = async (req, res) => {
 	} catch (error) {
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
-};
+}; */
 
 const listLikes = async (req, res) => {
 	const { id } = req.params;
@@ -152,7 +152,7 @@ const listNewPosts = async (req, res) => {
 
 export {
 	updatePost,
-	deletePost,
+	/* 	deletePost, */
 	likes,
 	listLikes,
 	listUsers,

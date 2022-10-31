@@ -21,7 +21,7 @@ import { connection } from "../database/db.js";
 		return;
 	}
 }
- */
+ 
 async function validateExistPost(req, res, next) {
 	const { id } = req.params;
 	try {
@@ -38,7 +38,7 @@ async function validateExistPost(req, res, next) {
 		res.sendStatus(STATUS_CODE.SERVER_ERROR);
 		return;
 	}
-}
+}*/
 
 async function validateLikes(req, res, next) {
 	const { userId, type, id } = req.body;
@@ -125,7 +125,7 @@ async function validateRepostId(req, res, next) {
 }
 
 export {
-	/* validateNewPost, */ validateExistPost,
+	/* validateNewPost,  validateExistPost,*/
 	validateLikes,
 	validateRepost,
 	validateRepostId,

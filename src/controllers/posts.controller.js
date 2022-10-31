@@ -53,4 +53,14 @@ async function listPosts(req, res) {
 	}
 }
 
-export { publishPost, listPosts };
+async function deletePost(req, res) {
+	const { id } = req.params;
+	try {
+		await postsRepository.deletePost(id);
+		return res.sendStatus(STATUS_CODE.OK);
+	} catch (error) {
+		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+	}
+}
+
+export { publishPost, listPosts, deletePost };
