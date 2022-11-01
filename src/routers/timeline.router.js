@@ -6,8 +6,8 @@ import {
 	updatePost,
 	listUsers,
 	listUserPosts,
-	newComment,
-	listComments,
+	/* 	newComment, 
+	listComments,*/
 	newRepost,
 	getReposts,
 	getRepostsById,
@@ -67,8 +67,8 @@ timelineRouter.put(
 ); */
 timelineRouter.get("/listusers", tokenValidation, listUsers);
 timelineRouter.get("/url/:id", tokenValidation, listUserPosts);
-timelineRouter.get("/timeline/comments/:postId", tokenValidation, listComments);
-timelineRouter.post("/timeline/newcomment", tokenValidation, newComment);
+//timelineRouter.get("/timeline/comments/:postId", tokenValidation, listComments);
+//timelineRouter.post("/timeline/newcomment", tokenValidation, newComment);
 timelineRouter.get(
 	"/timeline/setinterval",
 	tokenValidation,

@@ -79,7 +79,7 @@ const listUserPosts = async (req, res) => {
 	}
 };
 
-const listComments = async (req, res) => {
+/* const listComments = async (req, res) => {
 	const { postId } = req.params;
 	const { userId } = res.locals;
 
@@ -93,9 +93,9 @@ const listComments = async (req, res) => {
 		console.log("comments ", error.message);
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
-};
+}; */
 
-const newComment = async (req, res) => {
+/* const newComment = async (req, res) => {
 	const { comment, postId } = req.body;
 	const { userId } = res.locals;
 	try {
@@ -104,7 +104,7 @@ const newComment = async (req, res) => {
 	} catch (error) {
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
-};
+}; */
 
 const newRepost = async (req, res) => {
 	const { postId, userId } = req.body;
@@ -161,9 +161,9 @@ export {
 	listLikes,
 	listUsers,
 	listUserPosts,
-	listComments,
+	/* listComments, */
 	listNewPosts,
-	newComment,
+	//	newComment,
 	newRepost,
 	getReposts,
 	getRepostsById,
