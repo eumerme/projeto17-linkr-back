@@ -60,11 +60,24 @@ async function listAllPosts(userId) {
 }
 
 async function selectPostById(id) {
-	return connection.query(`SELECT * FROM ${TABLE.POSTS} WHERE id = $1`, [id]);
+	return connection.query(`SELECT * FROM ${TABLE.POSTS} WHERE id = $1;`, [id]);
 }
 
+async function editPostText(comment, id) {
+	return connection.query(
+		`UPDATE ${TABLE.POSTS} SET text = $1 WHERE id = $2;`,
+		[comment, id]
+	);
+}
 async function deletePost(id) {
 	return connection.query(`DELETE FROM ${TABLE.POSTS} WHERE id = $1;`, [id]);
 }
 
-export { insertPost, listUserPosts, listAllPosts, selectPostById, deletePost };
+export {
+	insertPost,
+	listUserPosts,
+	listAllPosts,
+	selectPostById,
+	editPostText,
+	deletePost,
+};

@@ -19,33 +19,10 @@ async function findPost(id) {
 	return connection.query(`SELECT * FROM ${TABLE.POSTS} WHERE id = $1`, [id]);
 }
 
-async function editPostText(comment, id) {
+/* async function editPostText(comment, id) {
 	return connection.query(
 		`UPDATE ${TABLE.POSTS} SET text = $1 WHERE id = $2;`,
 		[comment, id]
-	);
-}
-
-/* async function deleteFatalPost(id) {
-	connection.query(`DELETE FROM ${TABLE.LIKES} WHERE "postId" = $1;`, [id]);
-	const result = (
-		await connection.query(
-			`
-    SELECT * FROM ${TABLE.POSTS} WHERE id = $1;
-  `,
-			[id]
-		)
-	).rows[0];
-	connection.query(`DELETE FROM ${TABLE.POSTS} WHERE id = $1;`, [id]);
-
-	return result.repostBy;
-}
-
-async function deteleRepost(id) {
-	return connection.query(
-		`
-    DELETE FROM reposts WHERE id = $1;`,
-		[id]
 	);
 } */
 
@@ -62,20 +39,6 @@ async function likes(id) {
 		[id]
 	);
 }
-
-/* async function listPostComments(userId, postId) {
-	return connection.query(
-		`SELECT comments.comment, comments."userId" as "commentUserId", users.name, users."imageUrl", posts."userId" as "postUserId", follows."followeeId" AS "followee" FROM comments JOIN users ON users.id = comments."userId" JOIN posts ON comments."postId" = posts.id FULL JOIN follows ON comments."userId" = (SELECT follows."followeeId" FROM follows JOIN comments ON comments."userId" = follows."followeeId" WHERE follows."userId" = $1 LIMIT 1) WHERE posts.id = $2 ORDER BY comments."createdAt" DESC;`,
-		[userId, postId]
-	);
-}
-
-async function createNewComment(comment, postId, userId) {
-	return connection.query(
-		`INSERT INTO ${TABLE.COMMENTS} (comment, "postId", "userId") VALUES ($1, $2, $3)`,
-		[comment, postId, userId]
-	);
-} */
 
 async function listUserFollowing(userId) {
 	return connection.query(
@@ -152,15 +115,11 @@ async function listPostInterval(limit) {
 export {
 	updateLikes,
 	listPostInterval,
-	editPostText,
-	/* 	deleteFatalPost, */
+	//editPostText,
 	likes,
 	findPost,
-	//listPostComments,
-	/* 	createNewComment, */
 	createNewRepost,
 	countReposts,
 	listUserFollowing,
 	listUserNotFollowing,
-	/* 	deteleRepost, */
 };

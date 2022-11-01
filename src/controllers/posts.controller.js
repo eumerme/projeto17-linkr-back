@@ -53,6 +53,17 @@ async function listPosts(req, res) {
 	}
 }
 
+async function updatePost(req, res) {
+	const { comment } = req.body;
+	const { id } = req.params;
+	try {
+		await postsRepository.editPostText(comment, id);
+		return res.sendStatus(STATUS_CODE.CREATED);
+	} catch (error) {
+		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+	}
+}
+
 async function deletePost(req, res) {
 	const { id } = req.params;
 	try {
@@ -63,4 +74,4 @@ async function deletePost(req, res) {
 	}
 }
 
-export { publishPost, listPosts, deletePost };
+export { publishPost, listPosts, updatePost, deletePost };

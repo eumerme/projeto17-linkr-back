@@ -3,6 +3,7 @@ import {
 	deletePost,
 	listPosts,
 	publishPost,
+	updatePost,
 } from "../controllers/posts.controller.js";
 import { tokenValidation } from "../middlewares/token.validation.js";
 import { validateFollows } from "../middlewares/follows.middleware.js";
@@ -21,6 +22,12 @@ postsRouter.post(
 	schemasValidation,
 	urlValidation,
 	publishPost
+);
+postsRouter.patch(
+	"/timeline/posts/update/:id",
+	tokenValidation,
+	validatePost,
+	updatePost
 );
 postsRouter.get("/timeline/posts", tokenValidation, validateFollows, listPosts);
 postsRouter.delete(
