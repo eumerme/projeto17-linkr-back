@@ -56,10 +56,12 @@ async function listPosts(req, res) {
 async function updatePost(req, res) {
 	const { comment } = req.body;
 	const { id } = req.params;
+	console.log({ comment, id });
 	try {
 		await postsRepository.editPostText(comment, id);
 		return res.sendStatus(STATUS_CODE.CREATED);
 	} catch (error) {
+		console.log("update post ", error.message);
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
 }

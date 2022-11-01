@@ -43,6 +43,11 @@ async function schemasValidation(req, res, next) {
 		});
 	}
 
+	if (path === "/timeline/posts/update/:id") {
+		console.log("schemas ", req.body.comments);
+		result = schemas.editComment.validate(req.body);
+	}
+
 	if (result?.error) {
 		const message = result.error.details
 			.map((detail) => detail.message)

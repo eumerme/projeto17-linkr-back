@@ -15,6 +15,9 @@ const schemas = {
 		comment: Joi.string().trim().required(),
 		url: Joi.string().trim().required(),
 	}),
+	editComment: Joi.object().keys({
+		comment: Joi.string().trim().required(),
+	}),
 	/* paramsId: Joi.object().keys({
 		id: Joi.number().positive().integer(),
 	}), */

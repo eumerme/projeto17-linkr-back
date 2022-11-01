@@ -26,6 +26,7 @@ postsRouter.post(
 postsRouter.patch(
 	"/timeline/posts/update/:id",
 	tokenValidation,
+	schemasValidation,
 	validatePost,
 	updatePost
 );

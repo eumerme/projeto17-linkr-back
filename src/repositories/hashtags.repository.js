@@ -91,7 +91,7 @@ async function deleteHashtagsPosts(id) {
 	]);
 }
 
-async function deleteHashtags(hashtag) {
+async function deleteHashtag(hashtag) {
 	return connection.query(`DELETE FROM hashtags WHERE name = $1;`, [hashtag]);
 }
 
@@ -105,5 +105,5 @@ export {
 	selectHashtagsPosts,
 	selectHashtagName,
 	deleteHashtagsPosts,
-	deleteHashtags,
+	deleteHashtag,
 };
