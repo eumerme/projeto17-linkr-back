@@ -1,18 +1,27 @@
 import { connection } from "../database/db.js";
 import { TABLE } from "../enums/tables.js";
 
-async function insertNewComment(comment, postId, userId) {
+async function insertNewComment(comment, postId, commentUserId) {
 	return connection.query(
 		`INSERT INTO ${TABLE.COMMENTS} (comment, "postId", "userId")
-         VALUES ($1, $2, $3)`,
-		[comment, postId, userId]
+         VALUES ($1, $2, $3);`,
+		[comment, postId, commentUserId]
 	);
 }
 
-async function listPostComments(userId, postId) {
+async function listPostComments(postId) {
 	return connection.query(
-		`SELECT comments.comment, comments."userId" as "commentUserId", users.name, users."imageUrl", posts."userId" as "postUserId", follows."followeeId" AS "followee" FROM comments JOIN users ON users.id = comments."userId" JOIN posts ON comments."postId" = posts.id FULL JOIN follows ON comments."userId" = (SELECT follows."followeeId" FROM follows JOIN comments ON comments."userId" = follows."followeeId" WHERE follows."userId" = $1 LIMIT 1) WHERE posts.id = $2 ORDER BY comments."createdAt" DESC;`,
-		[userId, postId]
+		`SELECT ${TABLE.USERS}.name
+			, ${TABLE.USERS}."imageUrl"
+			, ${TABLE.POSTS}."userId" AS "postUserId"
+			, ${TABLE.COMMENTS}.comment
+			, ${TABLE.COMMENTS}."userId" AS "commentUserId"
+		FROM ${TABLE.COMMENTS} 
+		JOIN ${TABLE.USERS} ON ${TABLE.USERS}.id = ${TABLE.COMMENTS}."userId" 
+		JOIN ${TABLE.POSTS} ON ${TABLE.POSTS}.id = ${TABLE.COMMENTS}."postId"
+		WHERE ${TABLE.POSTS}.id = $1
+		ORDER BY ${TABLE.COMMENTS}."createdAt";`,
+		[postId]
 	);
 }
 
