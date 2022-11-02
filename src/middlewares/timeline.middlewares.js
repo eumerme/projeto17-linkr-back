@@ -1,37 +1,7 @@
 import { STATUS_CODE } from "../enums/status.code.js";
 import { TABLE } from "../enums/tables.js";
-import { likesSchema, repostsSchema } from "../schemas/schemas.js";
+import { repostsSchema } from "../schemas/schemas.js";
 import { connection } from "../database/db.js";
-
-async function validateLikes(req, res, next) {
-	const { userId, type, id } = req.body;
-
-	try {
-		const validation = likesSchema.validate(req.body, { abortEarly: false });
-		if (validation.error) {
-			const message = validation.error.details.map((value) => value.message);
-			res.status(STATUS_CODE.UNPROCESSABLE_ENTITY).send(message);
-			return;
-		}
-		const likeExist = (
-			await connection.query(
-				`
-	   SELECT * FROM ${TABLE.LIKES} WHERE "userId" = $1 AND "postId" = $2;
-	   `,
-				[userId, id]
-			)
-		).rows;
-
-		if (likeExist.length !== 0 && type === "like")
-			return res.sendStatus(STATUS_CODE.CONFLICT);
-		if (likeExist.length === 0 && type === "noLike")
-			return res.sendStatus(STATUS_CODE.UNPROCESSABLE_ENTITY);
-
-		next();
-	} catch (error) {
-		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
-	}
-}
 
 async function validateRepost(req, res, next) {
 	const { postId, userId } = req.body;
@@ -87,4 +57,4 @@ async function validateRepostId(req, res, next) {
 	}
 }
 
-export { validateLikes, validateRepost, validateRepostId };
+export { /* validateLikes ,*/ validateRepost, validateRepostId };

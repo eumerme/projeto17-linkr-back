@@ -1,8 +1,5 @@
 import { Router } from "express";
 import {
-	likes,
-	listLikes,
-	//updatePost,
 	listUsers,
 	listUserPosts,
 	/* newRepost,
@@ -10,23 +7,14 @@ import {
 	getRepostsById, */
 } from "../controllers/timeline.controllers.js";
 
-import {
-	/* 	validateExistPost, */
-	validateLikes,
-	/* 	validateRepost,
+import /* 	validateExistPost, */
+/* 	validateRepost,
 	validateRepostId, */
-} from "../middlewares/timeline.middlewares.js";
+"../middlewares/timeline.middlewares.js";
 import { tokenValidation } from "../middlewares/token.validation.js";
 
 const timelineRouter = Router();
 
-timelineRouter.post("/timeline/like", tokenValidation, validateLikes, likes);
-timelineRouter.get(
-	"/timeline/postsLikes/:id",
-	tokenValidation,
-	/* 	validateExistPost, */
-	listLikes
-);
 /*
 timelineRouter.post(
 	"/timeline/reposts",

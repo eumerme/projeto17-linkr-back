@@ -27,16 +27,16 @@ const schemas = {
 	comment: Joi.string().trim().required(),
 	url: Joi.string().trim().required(),
 });
- */
+
 const likesSchema = Joi.object({
 	id: Joi.number().required(),
 	userId: Joi.number().required(),
 	type: Joi.string().valid("like", "noLike").required(),
-});
+}); */
 
 const repostsSchema = Joi.object({
 	postId: Joi.number().required(),
 	userId: Joi.number().required(),
 });
 
-export { /* publishSchema, */ likesSchema, repostsSchema, schemas };
+export { repostsSchema, schemas };

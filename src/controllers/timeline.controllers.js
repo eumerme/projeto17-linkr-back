@@ -13,30 +13,6 @@ const likes = (req, res) => {
 	}
 };
 
-/* const updatePost = async (req, res) => {
-	const { comment } = req.body;
-	const { id } = req.params;
-	try {
-		await timelineRepository.editPostText(comment, id);
-		res.sendStatus(STATUS_CODE.CREATED);
-		return;
-	} catch (error) {
-		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
-	}
-}; */
-
-const listLikes = async (req, res) => {
-	const { id } = req.params;
-
-	try {
-		const result = await timelineRepository.likes(id);
-		return res.status(STATUS_CODE.OK).send(result.rows);
-	} catch (error) {
-		console.log(error.message);
-		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
-	}
-};
-
 const listUsers = async (req, res) => {
 	const { userId } = res.locals;
 	try {
@@ -117,9 +93,7 @@ const listNewPosts = async (req, res) => {
 };
 
 export {
-	//updatePost,
 	likes,
-	listLikes,
 	listUsers,
 	listUserPosts,
 	listNewPosts,

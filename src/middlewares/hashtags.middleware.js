@@ -3,15 +3,15 @@ import * as hashtagsRepository from "../repositories/hashtags.repository.js";
 
 async function checkHashtag(req, res, next) {
 	const { id } = req.params;
-	console.log({ id });
+	//console.log({ id });
 	try {
 		const { rows } = await hashtagsRepository.selectHashtag(id);
-		console.log({ rows });
+		//console.log({ rows });
 		if (rows.length !== 0) {
 			const { name: hashtagName } = rows[0];
 			const { rows: hashtagPostExist } =
 				await hashtagsRepository.selectHashtagsPosts(hashtagName);
-			console.log({ hashtagPostExist });
+			//console.log({ hashtagPostExist });
 
 			if (hashtagPostExist.amount === 1) {
 				await hashtagsRepository.deleteHashtagsPosts(id);
