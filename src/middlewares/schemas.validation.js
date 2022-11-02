@@ -44,7 +44,7 @@ async function schemasValidation(req, res, next) {
 	}
 
 	if (path === "/timeline/posts/update/:id") {
-		console.log("schemas ", req.body.comments);
+		console.log("schemas ", req.body.comment);
 		result = schemas.editComment.validate(req.body);
 	}
 

@@ -4,7 +4,9 @@ import {
 	listHashtags,
 	createHashtag,
 	insertIntoHashtagsPosts,
+	//insertIntoHashtagsPostsEdit,
 } from "../controllers/hashtags.controllers.js";
+//import { checkHashtagPost } from "../middlewares/hashtags.middleware.js";
 import { tokenValidation } from "../middlewares/token.validation.js";
 
 const hashtagsRouter = Router();
@@ -16,6 +18,13 @@ hashtagsRouter.post(
 	tokenValidation,
 	createHashtag,
 	insertIntoHashtagsPosts
-);
+); /* 
+hashtagsRouter.post(
+	"/hashtags-editpost",
+	tokenValidation,
+	checkHashtagPost,
+	createHashtag,
+	insertIntoHashtagsPostsEdit
+); */
 
 export { hashtagsRouter };

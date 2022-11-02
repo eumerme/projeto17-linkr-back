@@ -26,11 +26,12 @@ async function listPostHashtag(req, res) {
 
 async function createHashtag(req, res, next) {
 	const { hashtagText } = req.body;
+	console.log("entrou create hash");
 
 	try {
-		const { rows: hashtagExists } = await hashtagsRepository.selectHashtag(
-			hashtagText
-		);
+		const { rows: hashtagExists } =
+			await hashtagsRepository.selectHashtagByName(hashtagText);
+		console.log({ hashtagExists });
 		if (hashtagExists.length === 0) {
 			await hashtagsRepository.insertHashtag(hashtagText);
 		}
@@ -41,12 +42,14 @@ async function createHashtag(req, res, next) {
 }
 
 async function insertIntoHashtagsPosts(req, res) {
-	const { hashtagText, id } = req.body;
+	const { hashtagText, userId } = req.body;
+	console.log("entrou insert ");
 
 	try {
-		const { postId } = (await hashtagsRepository.selectPostId(id)).rows[0];
-		const { hashtagId } = (await hashtagsRepository.selectHashtag(hashtagText))
-			.rows[0];
+		const { postId } = (await hashtagsRepository.selectPostId(userId)).rows[0];
+		const { hashtagId } = (
+			await hashtagsRepository.selectHashtagByName(hashtagText)
+		).rows[0];
 
 		if (postId.length !== 0 && hashtagId.length !== 0) {
 			await hashtagsRepository.insertHashtagsPosts(postId, hashtagId);
@@ -57,9 +60,20 @@ async function insertIntoHashtagsPosts(req, res) {
 	}
 }
 
+async function insertIntoHashtagsPostsEdit(req, res) {
+	console.log("entrou insert edit post");
+
+	try {
+		//return res.sendStatus(STATUS_CODE.OK);
+	} catch (error) {
+		res.status(STATUS_CODE.SERVER_ERROR);
+	}
+}
+
 export {
 	listPostHashtag,
 	listHashtags,
 	createHashtag,
 	insertIntoHashtagsPosts,
+	insertIntoHashtagsPostsEdit,
 };

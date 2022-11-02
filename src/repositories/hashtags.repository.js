@@ -38,7 +38,7 @@ async function insertHashtag(hashtag) {
 	]);
 }
 
-async function selectHashtag(hashtag) {
+async function selectHashtagByName(hashtag) {
 	return connection.query(
 		`SELECT id AS "hashtagId" FROM ${TABLE.HASHTAGS} WHERE name = $1;`,
 		[hashtag]
@@ -59,10 +59,11 @@ async function insertHashtagsPosts(postId, hashtagId) {
 	);
 }
 
-async function selectHashtagName(id) {
+async function selectHashtag(id) {
 	console.log("select is post", id);
 	return connection.query(
 		`SELECT ${TABLE.HASHTAGS}.name
+			,  ${TABLE.HASHTAGS}.id
 		FROM "${TABLE.HASHTAGSPOSTS}"
 		JOIN ${TABLE.POSTS} ON ${TABLE.POSTS}.id = "${TABLE.HASHTAGSPOSTS}"."postId"
 		JOIN ${TABLE.HASHTAGS} ON ${TABLE.HASHTAGS}.id = "${TABLE.HASHTAGSPOSTS}"."hashtagId"
@@ -92,8 +93,17 @@ async function deleteHashtagsPosts(id) {
 }
 
 async function deleteHashtag(hashtag) {
-	return connection.query(`DELETE FROM hashtags WHERE name = $1;`, [hashtag]);
+	return connection.query(`DELETE FROM ${TABLE.HASHTAGS} WHERE name = $1;`, [
+		hashtag,
+	]);
 }
+
+/* async function selectPostContainsHashtag(postId, hashtagId) {
+	return connection.query(
+		`SELECT * FROM "hashtagsPosts" WHERE "postId" = $1 AND "hashtagId" = $2;`,
+		[postId, hashtagId]
+	);
+} */
 
 export {
 	listPostbyHashtag,
@@ -103,7 +113,8 @@ export {
 	selectPostId,
 	insertHashtagsPosts,
 	selectHashtagsPosts,
-	selectHashtagName,
+	selectHashtagByName,
 	deleteHashtagsPosts,
 	deleteHashtag,
+	/* 	selectPostContainsHashtag, */
 };
