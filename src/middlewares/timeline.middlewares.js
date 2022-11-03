@@ -2,7 +2,7 @@ import { STATUS_CODE } from "../enums/status.code.js";
 import { TABLE } from "../enums/tables.js";
 import { repostsSchema } from "../schemas/schemas.js";
 import { connection } from "../database/db.js";
-
+/* 
 async function validateRepost(req, res, next) {
 	const { postId, userId } = req.body;
 	try {
@@ -57,4 +57,4 @@ async function validateRepostId(req, res, next) {
 	}
 }
 
-export { /* validateLikes ,*/ validateRepost, validateRepostId };
+export { validateLikes , validateRepost, validateRepostId }; */

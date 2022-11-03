@@ -19,7 +19,7 @@ async function listLikes(req, res) {
 
 	try {
 		const likes = (await likesRepository.getLikes(id)).rows[0];
-		const isliked = likes.likedByIds.find((value) => value === userId);
+		const isliked = likes?.likedByIds?.find((value) => value === userId);
 
 		if (isliked) {
 			return res.status(STATUS_CODE.OK).send({ liked: true, likes });
@@ -27,7 +27,7 @@ async function listLikes(req, res) {
 			return res.status(STATUS_CODE.OK).send({ liked: false, likes });
 		}
 	} catch (error) {
-		console.log(error.message);
+		console.log("listLikes ", error.message);
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
 }

@@ -53,6 +53,18 @@ async function listPosts(req, res) {
 	}
 }
 
+async function listUserPosts(req, res) {
+	const { id } = req.params;
+	try {
+		const { rows: posts } = await postsRepository.listUserPosts(id);
+		return res.status(STATUS_CODE.OK).send(posts);
+	} catch (error) {
+		console.log("listUserPost ", error.message);
+
+		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+	}
+}
+
 async function updatePost(req, res) {
 	const { comment } = req.body;
 	const { id } = req.params;
@@ -76,4 +88,4 @@ async function deletePost(req, res) {
 	}
 }
 
-export { publishPost, listPosts, updatePost, deletePost };
+export { publishPost, listPosts, updatePost, deletePost, listUserPosts };

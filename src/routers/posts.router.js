@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
 	deletePost,
 	listPosts,
+	listUserPosts,
 	publishPost,
 	updatePost,
 } from "../controllers/posts.controller.js";
@@ -38,5 +39,6 @@ postsRouter.delete(
 	checkHashtag,
 	deletePost
 );
+postsRouter.get("/url/:id", tokenValidation, listUserPosts);
 
 export { postsRouter };

@@ -1,37 +1,10 @@
 import { connection } from "../database/db.js";
 import { TABLE } from "../enums/tables.js";
 
-async function findPost(id) {
+/* async function findPost(id) {
 	return connection.query(`SELECT * FROM ${TABLE.POSTS} WHERE id = $1`, [id]);
 }
 
-async function listUserFollowing(userId) {
-	return connection.query(
-		`SELECT users.id,
-			users.name,
-			users."imageUrl",
-			JSON_BUILD_OBJECT('following', TRUE) AS follow
-		FROM follows
-		JOIN users ON follows."followeeId" = users.id
-		WHERE follows."userId" = $1;`,
-		[userId]
-	);
-}
-
-async function listUserNotFollowing() {
-	return connection.query(
-		`SELECT users.id,
-			users.name,
-			users."imageUrl",
-			JSON_BUILD_OBJECT('following', FALSE) AS follow
-		FROM users
-		WHERE users.id NOT IN
-				(SELECT users.id
-					FROM users
-					JOIN follows ON follows."followeeId" = users.id
-					GROUP BY users.id);`
-	);
-}
 
 async function createNewRepost(postId, userId) {
 	await connection.query(
@@ -82,6 +55,6 @@ export {
 	findPost,
 	createNewRepost,
 	countReposts,
-	listUserFollowing,
-	listUserNotFollowing,
+	
 };
+ */

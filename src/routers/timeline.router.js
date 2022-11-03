@@ -1,21 +1,18 @@
-import { Router } from "express";
-import {
-	listUsers,
-	listUserPosts,
-	/* newRepost,
+/* import { Router } from "express";
+import newRepost,
 	getReposts,
-	getRepostsById, */
-} from "../controllers/timeline.controllers.js";
+	getRepostsById,
+"../controllers/timeline.controllers.js";
 
-import /* 	validateExistPost, */
-/* 	validateRepost,
-	validateRepostId, */
+import 	validateExistPost,
+	validateRepost,
+	validateRepostId,
 "../middlewares/timeline.middlewares.js";
 import { tokenValidation } from "../middlewares/token.validation.js";
 
 const timelineRouter = Router();
 
-/*
+
 timelineRouter.post(
 	"/timeline/reposts",
 	tokenValidation,
@@ -33,22 +30,13 @@ timelineRouter.get(
 	tokenValidation,
 	validateRepostId,
 	getRepostsById
-); */
+);
 
-/* timelineRouter.put(
-	"/timeline/posts/update/:id",
-	tokenValidation,
-	validateExistPost, 
-	updatePost
-); */
-
-timelineRouter.get("/listusers", tokenValidation, listUsers);
-timelineRouter.get("/url/:id", tokenValidation, listUserPosts);
-/* timelineRouter.get(
+timelineRouter.get(
 	"/timeline/setinterval",
 	tokenValidation,
 	validateFollows,
 	listNewPosts
-); */
+);
 
-export { timelineRouter };
+export { timelineRouter }; */
