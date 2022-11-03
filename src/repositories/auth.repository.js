@@ -14,7 +14,6 @@ async function verifyEmail(email) {
 	]);
 }
 
-//ver onde chamam essa query
 async function selectUserToken(userId, token) {
 	return connection.query(
 		`SELECT * FROM ${TABLE.SESSIONS} WHERE "userId" = $1 AND token = $2 AND active = TRUE;`,

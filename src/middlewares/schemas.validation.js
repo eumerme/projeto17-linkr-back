@@ -6,12 +6,10 @@ async function urlValidation(req, res, next) {
 	let url;
 
 	if (path === "/sign-up") url = req.body.imageUrl;
-
 	if (path === "/timeline/publish") url = req.body.url;
 
 	const validUrl =
 		url.substring(0, 7) === "http://" || url.substring(0, 8) === "https://";
-
 	if (!validUrl) {
 		return res
 			.status(STATUS_CODE.UNPROCESSABLE_ENTITY)
@@ -44,7 +42,6 @@ async function schemasValidation(req, res, next) {
 	}
 
 	if (path === "/timeline/posts/update/:id") {
-		console.log("schemas ", req.body.comment);
 		result = schemas.editComment.validate(req.body);
 	}
 

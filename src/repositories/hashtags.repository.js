@@ -60,7 +60,6 @@ async function insertHashtagsPosts(postId, hashtagId) {
 }
 
 async function selectHashtag(id) {
-	console.log("select is post", id);
 	return connection.query(
 		`SELECT ${TABLE.HASHTAGS}.name
 			,  ${TABLE.HASHTAGS}.id
@@ -73,7 +72,6 @@ async function selectHashtag(id) {
 }
 
 async function selectHashtagsPosts(hashtag) {
-	console.log("select ", hashtag);
 	return connection.query(
 		`SELECT ${TABLE.HASHTAGS}.name
 			, COUNT("${TABLE.HASHTAGSPOSTS}"."postId") AS amount
@@ -87,9 +85,10 @@ async function selectHashtagsPosts(hashtag) {
 }
 
 async function deleteHashtagsPosts(id) {
-	return connection.query(`DELETE FROM "hashtagsPosts" WHERE "postId" = $1;`, [
-		id,
-	]);
+	return connection.query(
+		`DELETE FROM "${TABLE.HASHTAGSPOSTS}" WHERE "postId" = $1;`,
+		[id]
+	);
 }
 
 async function deleteHashtag(hashtag) {

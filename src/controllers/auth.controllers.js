@@ -5,11 +5,11 @@ import * as authRepository from "../repositories/auth.repository.js";
 
 const signup = async (req, res) => {
 	const { name, password, imageUrl, email } = req.body;
+
 	try {
 		const passwordHash = bcrypt.hashSync(password, 10);
 
 		await authRepository.insertUser(name, email, passwordHash, imageUrl);
-
 		return res.sendStatus(STATUS_CODE.CREATED);
 	} catch (error) {
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
@@ -46,9 +46,9 @@ const signin = async (req, res) => {
 
 async function logout(req, res) {
 	const { token } = res.locals;
+
 	try {
 		await authRepository.inactivateSession(token);
-
 		return res.sendStatus(STATUS_CODE.OK);
 	} catch (error) {
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);

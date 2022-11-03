@@ -44,17 +44,13 @@ async function listUsers(req, res) {
 		const { rows: following } = await followsRepository.listUserFollowing(
 			userId
 		);
-
 		const { rows: notFollowing } = await followsRepository.listUserNotFollowing(
 			userId
 		);
 
 		const users = [...following, ...notFollowing];
-		console.log({ following, notFollowing, users });
-
 		return res.status(STATUS_CODE.OK).send(users);
 	} catch (error) {
-		console.log(error.message);
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
 }

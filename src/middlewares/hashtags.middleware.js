@@ -3,15 +3,13 @@ import * as hashtagsRepository from "../repositories/hashtags.repository.js";
 
 async function checkHashtag(req, res, next) {
 	const { id } = req.params;
-	//console.log({ id });
+
 	try {
 		const { rows } = await hashtagsRepository.selectHashtag(id);
-		//console.log({ rows });
 		if (rows.length !== 0) {
 			const { name: hashtagName } = rows[0];
 			const { rows: hashtagPostExist } =
 				await hashtagsRepository.selectHashtagsPosts(hashtagName);
-			//console.log({ hashtagPostExist });
 
 			if (hashtagPostExist.amount === 1) {
 				await hashtagsRepository.deleteHashtagsPosts(id);
@@ -28,8 +26,6 @@ async function checkHashtag(req, res, next) {
 
 /* async function checkHashtagPost(req, res, next) {
 	const { postId, comment } = req.body;
-	console.log("entrou check hashtag post");
-	console.log({ postId, comment });
 
 	try {
 		const { rows } = await hashtagsRepository.selectHashtag(postId);
@@ -38,8 +34,6 @@ async function checkHashtag(req, res, next) {
 			const { id: hashtagId } = rows[0];
 			const { rows: postContainsHashtag } =
 				await hashtagsRepository.selectPostContainsHashtag(postId, hashtagId);
-
-			console.log({ postId, rows, hashtagId, postContainsHashtag });
 
 			if (postContainsHashtag.length !== 0) {
 				//res.locals.hasHashtagId = hashtagId;

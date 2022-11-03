@@ -8,7 +8,6 @@ async function likeDislike(req, res) {
 		await likesRepository.insertLikeDislike(postId, userId, isLiked);
 		return res.sendStatus(STATUS_CODE.CREATED);
 	} catch (error) {
-		console.log("likes ", error.message);
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
 }
@@ -27,7 +26,6 @@ async function listLikes(req, res) {
 			return res.status(STATUS_CODE.OK).send({ liked: false, likes });
 		}
 	} catch (error) {
-		console.log("listLikes ", error.message);
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
 }

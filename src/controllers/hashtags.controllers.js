@@ -3,35 +3,32 @@ import * as hashtagsRepository from "../repositories/hashtags.repository.js";
 
 async function listHashtags(req, res) {
 	try {
-		const result = await hashtagsRepository.listHashtags();
-		res.status(STATUS_CODE.OK).send(result.rows);
-		return;
+		const { rows: hashtags } = await hashtagsRepository.listHashtags();
+		return res.status(STATUS_CODE.OK).send(hashtags);
 	} catch (error) {
-		res.status(STATUS_CODE.SERVER_ERROR).send(error.message);
-		return;
+		return res.status(STATUS_CODE.SERVER_ERROR).send(error.message);
 	}
 }
 
 async function listPostHashtag(req, res) {
 	const { hashtagName } = req.params;
+
 	try {
-		const result = await hashtagsRepository.listPostbyHashtag(hashtagName);
-		res.status(STATUS_CODE.OK).send(result.rows);
-		return;
+		const { rows: postsByHashtag } = await hashtagsRepository.listPostbyHashtag(
+			hashtagName
+		);
+		return res.status(STATUS_CODE.OK).send(postsByHashtag);
 	} catch (error) {
-		res.status(STATUS_CODE.SERVER_ERROR);
-		return;
+		return res.status(STATUS_CODE.SERVER_ERROR);
 	}
 }
 
 async function createHashtag(req, res, next) {
 	const { hashtagText } = req.body;
-	console.log("entrou create hash");
 
 	try {
 		const { rows: hashtagExists } =
 			await hashtagsRepository.selectHashtagByName(hashtagText);
-		console.log({ hashtagExists });
 		if (hashtagExists.length === 0) {
 			await hashtagsRepository.insertHashtag(hashtagText);
 		}
@@ -43,7 +40,6 @@ async function createHashtag(req, res, next) {
 
 async function insertIntoHashtagsPosts(req, res) {
 	const { hashtagText, userId } = req.body;
-	console.log("entrou insert ");
 
 	try {
 		const { postId } = (await hashtagsRepository.selectPostId(userId)).rows[0];
@@ -60,20 +56,20 @@ async function insertIntoHashtagsPosts(req, res) {
 	}
 }
 
-async function insertIntoHashtagsPostsEdit(req, res) {
+/* async function insertIntoHashtagsPostsEdit(req, res) {
 	console.log("entrou insert edit post");
 
 	try {
-		//return res.sendStatus(STATUS_CODE.OK);
+		return res.sendStatus(STATUS_CODE.OK);
 	} catch (error) {
 		res.status(STATUS_CODE.SERVER_ERROR);
 	}
-}
+} */
 
 export {
 	listPostHashtag,
 	listHashtags,
 	createHashtag,
 	insertIntoHashtagsPosts,
-	insertIntoHashtagsPostsEdit,
+	//insertIntoHashtagsPostsEdit,
 };
