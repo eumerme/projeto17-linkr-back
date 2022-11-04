@@ -8,12 +8,11 @@ function insertLikeDislike(postId, userId, isLiked) {
 			`INSERT INTO ${TABLE.LIKES} ("userId", "postId") VALUES ($1, $2);`,
 			[userId, postId]
 		);
-	} else {
-		return connection.query(
-			`DELETE FROM ${TABLE.LIKES} WHERE "userId" = $1 AND "postId" = $2;`,
-			[userId, postId]
-		);
 	}
+	return connection.query(
+		`DELETE FROM ${TABLE.LIKES} WHERE "userId" = $1 AND "postId" = $2;`,
+		[userId, postId]
+	);
 }
 
 async function getLikes(id) {

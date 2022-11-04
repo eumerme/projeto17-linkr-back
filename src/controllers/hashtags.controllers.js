@@ -1,5 +1,6 @@
 import { STATUS_CODE } from "../enums/status.code.js";
 import * as hashtagsRepository from "../repositories/hashtags.repository.js";
+import * as postsRepository from "../repositories/posts.repository.js";
 
 async function listHashtags(req, res) {
 	try {
@@ -42,7 +43,7 @@ async function insertIntoHashtagsPosts(req, res) {
 	const { hashtagText, userId } = req.body;
 
 	try {
-		const { postId } = (await hashtagsRepository.selectPostId(userId)).rows[0];
+		const { postId } = (await postsRepository.selectPostId(userId)).rows[0];
 		const { hashtagId } = (
 			await hashtagsRepository.selectHashtagByName(hashtagText)
 		).rows[0];

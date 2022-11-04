@@ -1,5 +1,6 @@
 import { STATUS_CODE } from "../enums/status.code.js";
 import * as postsRepository from "../repositories/posts.repository.js";
+import * as repostsRepository from "../repositories/reposts.repository.js";
 import urlMetadata from "url-metadata";
 
 async function publishPost(req, res) {
@@ -34,19 +35,62 @@ async function publishPost(req, res) {
 }
 
 async function listPosts(req, res) {
-	const { userId, followSomeone } = res.locals;
+	const { userId, followSomeone, existRepost, repostByOwner, reposts } =
+		res.locals;
+
+	console.log({ userId, followSomeone, existRepost, repostByOwner, reposts });
 
 	try {
 		if (followSomeone === false) {
 			const { rows: userPosts } = await postsRepository.listUserPosts(userId);
+
+			if (existRepost) {
+				const posts = [...repostByOwner, ...userPosts];
+
+				Promise.all(
+					posts.sort(
+						(a, b) =>
+							new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+					)
+				);
+
+				console.log(
+					"================ VAI PRO FRONT repostbyowner userposts =================== ",
+					posts
+				);
+
+				return res.status(STATUS_CODE.OK).send({ followSomeone, posts });
+			}
+
 			return res
 				.status(STATUS_CODE.OK)
 				.send({ followSomeone, posts: userPosts });
 		}
 
 		const { rows: posts } = await postsRepository.listAllPosts(userId);
+
+		if (existRepost) {
+			const postsReposts = [...reposts, ...posts];
+
+			Promise.all(
+				postsReposts.sort(
+					(a, b) =>
+						new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+				)
+			);
+
+			console.log(
+				"================ VAI PRO FRONT posts/reposts=================== ",
+				postsReposts
+			);
+			return res
+				.status(STATUS_CODE.OK)
+				.send({ followSomeone: true, posts: postsReposts });
+		}
+
 		return res.status(STATUS_CODE.OK).send({ followSomeone: true, posts });
 	} catch (error) {
+		console.log(error.message);
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
 }

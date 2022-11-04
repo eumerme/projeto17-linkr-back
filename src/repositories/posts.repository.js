@@ -25,8 +25,10 @@ async function listUserPosts(id) {
             , ${TABLE.POSTS}."urlTitle"
             , ${TABLE.POSTS}."urlImage"
             , ${TABLE.POSTS}."urlDescription"
+			, ${TABLE.POSTS}."createdAt"
             , ${TABLE.USERS}.name
             , ${TABLE.USERS}."imageUrl"
+			, JSON_BUILD_OBJECT('isRepost', FALSE) AS repost
 		FROM ${TABLE.POSTS}
 		JOIN ${TABLE.USERS} ON ${TABLE.POSTS}."userId" = ${TABLE.USERS}.id
 		WHERE ${TABLE.USERS}.id = $1
@@ -44,8 +46,10 @@ async function listAllPosts(userId) {
             , ${TABLE.POSTS}."urlTitle"
             , ${TABLE.POSTS}."urlImage"
             , ${TABLE.POSTS}."urlDescription"
+			, ${TABLE.POSTS}."createdAt"
             , ${TABLE.USERS}.name
             , ${TABLE.USERS}."imageUrl"
+			, JSON_BUILD_OBJECT('isRepost', FALSE) AS repost
         FROM ${TABLE.FOLLOWS} 
         JOIN ${TABLE.POSTS} ON ${TABLE.FOLLOWS}."followeeId" = ${TABLE.POSTS}."userId"
             OR ${TABLE.FOLLOWS}."userId" = ${TABLE.POSTS}."userId"
@@ -63,6 +67,13 @@ async function selectPostById(id) {
 	return connection.query(`SELECT * FROM ${TABLE.POSTS} WHERE id = $1;`, [id]);
 }
 
+async function selectPostId(id) {
+	return connection.query(
+		`SELECT id AS "postId" FROM ${TABLE.POSTS} where "userId" = $1 ORDER BY "createdAt" DESC;`,
+		[id]
+	);
+}
+
 async function editPostText(comment, id) {
 	return connection.query(
 		`UPDATE ${TABLE.POSTS} SET text = $1 WHERE id = $2;`,
@@ -78,6 +89,7 @@ export {
 	listUserPosts,
 	listAllPosts,
 	selectPostById,
+	selectPostId,
 	editPostText,
 	deletePost,
 };

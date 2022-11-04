@@ -16,18 +16,18 @@ async function listPostbyHashtag(text) {
 	const newText = `%#${text}%`;
 	return connection.query(
 		`SELECT ${TABLE.POSTS}.text
-      , ${TABLE.POSTS}.id
-      , ${TABLE.POSTS}."userId"
-      , ${TABLE.POSTS}.url
-      , ${TABLE.POSTS}."urlTitle"
-      , ${TABLE.POSTS}."urlImage"
-      , ${TABLE.POSTS}."urlDescription"
-      , ${TABLE.USERS}.name
-      , ${TABLE.USERS}."imageUrl"
-    FROM ${TABLE.POSTS} 
-    JOIN ${TABLE.USERS} ON ${TABLE.POSTS}."userId" = ${TABLE.USERS}.id 
-    WHERE text LIKE $1 
-    ORDER BY ${TABLE.POSTS}."createdAt" DESC;`,
+			, ${TABLE.POSTS}.id
+			, ${TABLE.POSTS}."userId"
+			, ${TABLE.POSTS}.url
+			, ${TABLE.POSTS}."urlTitle"
+			, ${TABLE.POSTS}."urlImage"
+			, ${TABLE.POSTS}."urlDescription"
+			, ${TABLE.USERS}.name
+			, ${TABLE.USERS}."imageUrl"
+		FROM ${TABLE.POSTS} 
+		JOIN ${TABLE.USERS} ON ${TABLE.POSTS}."userId" = ${TABLE.USERS}.id 
+		WHERE text LIKE $1 
+		ORDER BY ${TABLE.POSTS}."createdAt" DESC;`,
 		[newText]
 	);
 }
@@ -42,13 +42,6 @@ async function selectHashtagByName(hashtag) {
 	return connection.query(
 		`SELECT id AS "hashtagId" FROM ${TABLE.HASHTAGS} WHERE name = $1;`,
 		[hashtag]
-	);
-}
-
-async function selectPostId(id) {
-	return connection.query(
-		`SELECT id AS "postId" FROM ${TABLE.POSTS} where "userId" = $1 ORDER BY "createdAt" DESC;`,
-		[id]
 	);
 }
 
@@ -107,7 +100,6 @@ export {
 	listHashtags,
 	insertHashtag,
 	selectHashtag,
-	selectPostId,
 	insertHashtagsPosts,
 	selectHashtagsPosts,
 	selectHashtagByName,

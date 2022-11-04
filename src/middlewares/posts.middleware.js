@@ -4,6 +4,7 @@ import * as followsRepository from "../repositories/follows.repository.js";
 import * as hashtagsRepository from "../repositories/hashtags.repository.js";
 import * as likesRepository from "../repositories/likes.repository.js";
 import * as commentsRepository from "../repositories/comments.repository.js";
+import * as repostsRepository from "../repositories/reposts.repository.js";
 
 async function validatePost(req, res, next) {
 	const { id } = req.params;
@@ -23,9 +24,9 @@ async function checkFollows(req, res, next) {
 	const { userId } = res.locals;
 
 	try {
-		const { rows: result } = await followsRepository.checkUserFollows(userId);
+		const { rows: follows } = await followsRepository.checkUserFollows(userId);
 
-		if (result.length === 0) res.locals.followSomeone = false;
+		if (follows.length === 0) res.locals.followSomeone = false;
 
 		next();
 	} catch (error) {
@@ -90,4 +91,43 @@ async function checkComments(req, res, next) {
 	}
 }
 
-export { validatePost, checkFollows, checkHashtag, checkLikes, checkComments };
+async function checkReposts(req, res, next) {
+	const { userId } = res.locals;
+
+	try {
+		const { rows: reposts } = await repostsRepository.getReposts();
+
+		const repostByOwner = [];
+		if (reposts.length !== 0) {
+			Promise.all(
+				reposts.map(async (value) => {
+					const post = (await postsRepository.selectPostById(value.postId))
+						.rows[0];
+					post.createdAt = value.createdAt;
+
+					if (value.repostById === userId) {
+						post.repost = { isRepost: true };
+						repostByOwner.push(post);
+					}
+				})
+			);
+			res.locals.existRepost = true;
+		}
+
+		res.locals.repostByOwner = repostByOwner;
+		res.locals.reposts = reposts;
+
+		next();
+	} catch (error) {
+		res.status(STATUS_CODE.SERVER_ERROR);
+	}
+}
+
+export {
+	validatePost,
+	checkFollows,
+	checkHashtag,
+	checkLikes,
+	checkComments,
+	checkReposts,
+};
