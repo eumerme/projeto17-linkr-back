@@ -28,4 +28,23 @@ async function getLikes(id) {
 	);
 }
 
-export { insertLikeDislike, getLikes };
+async function selectLikes(id) {
+	return connection.query(
+		`SELECT ${TABLE.LIKES}."userId"
+			,  ${TABLE.LIKES}."postId"
+		FROM ${TABLE.LIKES}
+		JOIN ${TABLE.POSTS} ON ${TABLE.POSTS}.id = ${TABLE.LIKES}."postId"
+		WHERE ${TABLE.POSTS}.id = $1;`,
+		[id]
+	);
+}
+
+async function deletePostsLikes(userId, postId) {
+	return connection.query(
+		`DELETE FROM ${TABLE.LIKES} 
+		WHERE ${TABLE.LIKES}."userId" = $1 AND ${TABLE.LIKES}."postId" = $2;`,
+		[userId, postId]
+	);
+}
+
+export { insertLikeDislike, getLikes, selectLikes, deletePostsLikes };

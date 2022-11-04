@@ -25,4 +25,28 @@ async function listPostComments(postId) {
 	);
 }
 
-export { insertNewComment, listPostComments };
+async function selectComments(id) {
+	return connection.query(
+		`SELECT ${TABLE.COMMENTS}."userId"
+			,  ${TABLE.COMMENTS}."postId"
+		FROM ${TABLE.COMMENTS}
+		JOIN ${TABLE.POSTS} ON ${TABLE.POSTS}.id = ${TABLE.COMMENTS}."postId"
+		WHERE ${TABLE.POSTS}.id = $1;`,
+		[id]
+	);
+}
+
+async function deletePostsComments(userId, postId) {
+	return connection.query(
+		`DELETE FROM ${TABLE.COMMENTS}
+		WHERE ${TABLE.COMMENTS}."userId" = $1 AND ${TABLE.COMMENTS}."postId" = $2;`,
+		[userId, postId]
+	);
+}
+
+export {
+	insertNewComment,
+	listPostComments,
+	selectComments,
+	deletePostsComments,
+};

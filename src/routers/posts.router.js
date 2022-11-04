@@ -7,13 +7,19 @@ import {
 	updatePost,
 } from "../controllers/posts.controller.js";
 import { tokenValidation } from "../middlewares/token.validation.js";
-import { validateFollows } from "../middlewares/follows.middleware.js";
+//import { validateFollows } from "../middlewares/follows.middleware.js";
 import {
 	schemasValidation,
 	urlValidation,
 } from "../middlewares/schemas.validation.js";
-import { validatePost } from "../middlewares/posts.middleware.js";
-import { checkHashtag } from "../middlewares/hashtags.middleware.js";
+import {
+	validatePost,
+	checkFollows,
+	checkHashtag,
+	checkLikes,
+	checkComments,
+} from "../middlewares/posts.middleware.js";
+//import { checkHashtag } from "../middlewares/hashtags.middleware.js";
 
 const postsRouter = Router();
 
@@ -31,12 +37,14 @@ postsRouter.patch(
 	validatePost,
 	updatePost
 );
-postsRouter.get("/timeline/posts", tokenValidation, validateFollows, listPosts);
+postsRouter.get("/timeline/posts", tokenValidation, checkFollows, listPosts);
 postsRouter.delete(
 	"/timeline/posts/delete/:id",
 	tokenValidation,
 	validatePost,
 	checkHashtag,
+	checkLikes,
+	checkComments,
 	deletePost
 );
 postsRouter.get("/url/:id", tokenValidation, listUserPosts);

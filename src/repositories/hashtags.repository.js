@@ -91,10 +91,8 @@ async function deleteHashtagsPosts(id) {
 	);
 }
 
-async function deleteHashtag(hashtag) {
-	return connection.query(`DELETE FROM ${TABLE.HASHTAGS} WHERE name = $1;`, [
-		hashtag,
-	]);
+async function deleteHashtag(id) {
+	return connection.query(`DELETE FROM ${TABLE.HASHTAGS} WHERE id = $1;`, [id]);
 }
 
 /* async function selectPostContainsHashtag(postId, hashtagId) {
