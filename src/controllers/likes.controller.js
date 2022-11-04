@@ -21,9 +21,9 @@ async function listLikes(req, res) {
 		const isliked = likes?.likedByIds?.find((value) => value === userId);
 
 		if (isliked) {
-			return res.status(STATUS_CODE.OK).send({ liked: true, likes });
+			return res.status(STATUS_CODE.OK).send({ isLiked: true, likes });
 		} else {
-			return res.status(STATUS_CODE.OK).send({ liked: false, likes });
+			return res.status(STATUS_CODE.OK).send({ isLiked: false, likes });
 		}
 	} catch (error) {
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
