@@ -92,30 +92,37 @@ async function checkComments(req, res, next) {
 }
 
 async function checkReposts(req, res, next) {
-	const { userId } = res.locals;
+	const { userId, followSomeone } = res.locals;
 
 	try {
-		const { rows: reposts } = await repostsRepository.getReposts();
+		let reposts;
 
-		const repostByOwner = [];
+		if (followSomeone === false) {
+			reposts = (await repostsRepository.getUserReposts(userId)).rows;
+		} else {
+			reposts = (await repostsRepository.getAllReposts(userId)).rows;
+		}
+
 		if (reposts.length !== 0) {
-			Promise.all(
+			const allReposts = [];
+			await Promise.all(
 				reposts.map(async (value) => {
 					const post = (await postsRepository.selectPostById(value.postId))
 						.rows[0];
 					post.createdAt = value.createdAt;
+					post.repost = {
+						isRepost: true,
+						repostedById: value.repostBy,
+						repostedByName: value.name,
+					};
 
-					if (value.repostById === userId) {
-						post.repost = { isRepost: true };
-						repostByOwner.push(post);
-					}
+					allReposts.push(post);
 				})
 			);
-			res.locals.existRepost = true;
-		}
 
-		res.locals.repostByOwner = repostByOwner;
-		res.locals.reposts = reposts;
+			res.locals.existRepost = true;
+			res.locals.reposts = allReposts;
+		}
 
 		next();
 	} catch (error) {

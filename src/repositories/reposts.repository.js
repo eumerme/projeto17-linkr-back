@@ -1,53 +1,45 @@
 import { connection } from "../database/db.js";
 import { TABLE } from "../enums/tables.js";
 
-/* async function findPost(id) {
-	return connection.query(`SELECT * FROM ${TABLE.POSTS} WHERE id = $1`, [id]);
-} */
-
 async function insertRepost(userId, postId) {
 	return connection.query(
-		`INSERT INTO reposts ("repostBy", "postId") VALUES ($1, $2);`,
+		`INSERT INTO ${TABLE.REPOSTS} ("repostBy", "postId") VALUES ($1, $2);`,
 		[userId, postId]
 	);
 }
 
-async function getReposts() {
+async function getUserReposts(userId) {
 	return connection.query(
-		`SELECT reposts."repostBy" AS "repostById" 
-			, users.name AS "repostByName"
-			, reposts."postId"
-			, reposts."createdAt"
-		FROM reposts
-		JOIN users ON reposts."repostBy" = users.id
-		CROSS JOIN posts
-		GROUP BY "repostById"
-			, "repostByName"
-			, reposts."postId"
-			, reposts."createdAt";`
+		`SELECT ${TABLE.REPOSTS}."repostBy" 
+			, ${TABLE.USERS}.name
+			, ${TABLE.REPOSTS}."postId"
+			, ${TABLE.REPOSTS}."createdAt"
+		FROM ${TABLE.REPOSTS}
+		JOIN ${TABLE.USERS} ON ${TABLE.REPOSTS}."repostBy" = ${TABLE.USERS}.id
+		WHERE ${TABLE.REPOSTS}."repostBy" = $1
+		ORDER BY ${TABLE.REPOSTS}."createdAt" DESC;`,
+		[userId]
 	);
 }
 
-/* async function countReposts(id) {
+async function getAllReposts(userId) {
 	return connection.query(
-		`SELECT COUNT("postId") AS "countReposts"
-      FROM reposts 
-      WHERE "postId" = $1;`,
-		[id]
+		`SELECT ${TABLE.REPOSTS}."repostBy" 
+			, ${TABLE.USERS}.name
+			, ${TABLE.REPOSTS}."postId"
+			, ${TABLE.REPOSTS}."createdAt"
+		FROM ${TABLE.FOLLOWS}
+		JOIN ${TABLE.REPOSTS} ON ${TABLE.FOLLOWS}."followeeId" = ${TABLE.REPOSTS}."repostBy"
+			OR ${TABLE.FOLLOWS}."userId" = ${TABLE.REPOSTS}."repostBy"
+		JOIN ${TABLE.USERS} ON ${TABLE.REPOSTS}."repostBy" = ${TABLE.USERS}.id
+		WHERE ${TABLE.FOLLOWS}."userId" = $1
+		GROUP BY ${TABLE.REPOSTS}."repostBy" 
+			, ${TABLE.REPOSTS}."postId"
+			, ${TABLE.REPOSTS}."createdAt"
+			, ${TABLE.USERS}.name
+		ORDER BY ${TABLE.REPOSTS}."createdAt" DESC;`,
+		[userId]
 	);
 }
 
-async function listPostInterval(limit) {
-	return connection.query(
-		`SELECT COUNT(id) AS "allPosts" FROM posts WHERE "createdAt" > $1;`,
-		[limit]
-	);
-} */
-
-export {
-	/* listPostInterval,
-	findPost,
-	countReposts, */
-	insertRepost,
-	getReposts,
-};
+export { insertRepost, getUserReposts, getAllReposts };

@@ -35,30 +35,20 @@ async function publishPost(req, res) {
 }
 
 async function listPosts(req, res) {
-	const { userId, followSomeone, existRepost, repostByOwner, reposts } =
-		res.locals;
-
-	console.log({ userId, followSomeone, existRepost, repostByOwner, reposts });
+	const { userId, followSomeone, existRepost, reposts } = res.locals;
 
 	try {
 		if (followSomeone === false) {
 			const { rows: userPosts } = await postsRepository.listUserPosts(userId);
 
 			if (existRepost) {
-				const posts = [...repostByOwner, ...userPosts];
-
-				Promise.all(
+				const posts = [...reposts, ...userPosts];
+				await Promise.all(
 					posts.sort(
 						(a, b) =>
 							new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
 					)
 				);
-
-				console.log(
-					"================ VAI PRO FRONT repostbyowner userposts =================== ",
-					posts
-				);
-
 				return res.status(STATUS_CODE.OK).send({ followSomeone, posts });
 			}
 
@@ -71,17 +61,11 @@ async function listPosts(req, res) {
 
 		if (existRepost) {
 			const postsReposts = [...reposts, ...posts];
-
-			Promise.all(
+			await Promise.all(
 				postsReposts.sort(
 					(a, b) =>
 						new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
 				)
-			);
-
-			console.log(
-				"================ VAI PRO FRONT posts/reposts=================== ",
-				postsReposts
 			);
 			return res
 				.status(STATUS_CODE.OK)
@@ -90,7 +74,6 @@ async function listPosts(req, res) {
 
 		return res.status(STATUS_CODE.OK).send({ followSomeone: true, posts });
 	} catch (error) {
-		console.log(error.message);
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
 }

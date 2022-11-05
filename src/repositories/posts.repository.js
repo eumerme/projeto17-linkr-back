@@ -18,14 +18,7 @@ async function insertPost({
 
 async function listUserPosts(id) {
 	return connection.query(
-		`SELECT ${TABLE.POSTS}.text
-            , ${TABLE.POSTS}.id
-            , ${TABLE.POSTS}."userId"
-            , ${TABLE.POSTS}.url
-            , ${TABLE.POSTS}."urlTitle"
-            , ${TABLE.POSTS}."urlImage"
-            , ${TABLE.POSTS}."urlDescription"
-			, ${TABLE.POSTS}."createdAt"
+		`SELECT ${TABLE.POSTS}.*
             , ${TABLE.USERS}.name
             , ${TABLE.USERS}."imageUrl"
 			, JSON_BUILD_OBJECT('isRepost', FALSE) AS repost
@@ -39,14 +32,7 @@ async function listUserPosts(id) {
 
 async function listAllPosts(userId) {
 	return connection.query(
-		`SELECT ${TABLE.POSTS}.text
-            , ${TABLE.POSTS}.id
-            , ${TABLE.POSTS}."userId"
-            , ${TABLE.POSTS}.url
-            , ${TABLE.POSTS}."urlTitle"
-            , ${TABLE.POSTS}."urlImage"
-            , ${TABLE.POSTS}."urlDescription"
-			, ${TABLE.POSTS}."createdAt"
+		`SELECT ${TABLE.POSTS}.*
             , ${TABLE.USERS}.name
             , ${TABLE.USERS}."imageUrl"
 			, JSON_BUILD_OBJECT('isRepost', FALSE) AS repost
@@ -64,7 +50,16 @@ async function listAllPosts(userId) {
 }
 
 async function selectPostById(id) {
-	return connection.query(`SELECT * FROM ${TABLE.POSTS} WHERE id = $1;`, [id]);
+	//pegar as informações da tabela users
+	return connection.query(
+		`SELECT ${TABLE.POSTS}.*
+			, ${TABLE.USERS}.name
+			, ${TABLE.USERS}."imageUrl"
+		FROM ${TABLE.POSTS}
+		JOIN ${TABLE.USERS} ON ${TABLE.POSTS}."userId" = ${TABLE.USERS}.id
+		WHERE ${TABLE.POSTS}.id = $1;`,
+		[id]
+	);
 }
 
 async function selectPostId(id) {
