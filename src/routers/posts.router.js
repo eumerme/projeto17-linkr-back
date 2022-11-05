@@ -18,7 +18,7 @@ import {
 	checkHashtag,
 	checkLikes,
 	checkComments,
-	checkReposts,
+	validateRepost,
 } from "../middlewares/posts.middleware.js";
 //import { checkHashtag } from "../middlewares/hashtags.middleware.js";
 
@@ -42,7 +42,7 @@ postsRouter.get(
 	"/timeline/posts",
 	tokenValidation,
 	checkFollows,
-	checkReposts,
+	validateRepost,
 	listPosts
 );
 postsRouter.delete(

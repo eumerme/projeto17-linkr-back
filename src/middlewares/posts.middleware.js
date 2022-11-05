@@ -91,7 +91,7 @@ async function checkComments(req, res, next) {
 	}
 }
 
-async function checkReposts(req, res, next) {
+async function validateRepost(req, res, next) {
 	const { userId, followSomeone } = res.locals;
 
 	try {
@@ -136,5 +136,5 @@ export {
 	checkHashtag,
 	checkLikes,
 	checkComments,
-	checkReposts,
+	validateRepost,
 };

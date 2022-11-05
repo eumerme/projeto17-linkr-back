@@ -22,9 +22,14 @@ async function listUserPosts(id) {
             , ${TABLE.USERS}.name
             , ${TABLE.USERS}."imageUrl"
 			, JSON_BUILD_OBJECT('isRepost', FALSE) AS repost
+			, COUNT(${TABLE.REPOSTS}."postId") AS "repostsAmount"
 		FROM ${TABLE.POSTS}
 		JOIN ${TABLE.USERS} ON ${TABLE.POSTS}."userId" = ${TABLE.USERS}.id
+		FULL JOIN ${TABLE.REPOSTS} ON posts.id = ${TABLE.REPOSTS}."postId"
 		WHERE ${TABLE.USERS}.id = $1
+		GROUP BY ${TABLE.POSTS}.id,
+			${TABLE.USERS}.name,
+			${TABLE.USERS}."imageUrl"
 		ORDER BY ${TABLE.POSTS}."createdAt" DESC;`,
 		[id]
 	);
@@ -36,11 +41,13 @@ async function listAllPosts(userId) {
             , ${TABLE.USERS}.name
             , ${TABLE.USERS}."imageUrl"
 			, JSON_BUILD_OBJECT('isRepost', FALSE) AS repost
-        FROM ${TABLE.FOLLOWS} 
+			, COUNT(${TABLE.REPOSTS}."postId") AS "repostsAmount"
+		FROM ${TABLE.FOLLOWS} 
         JOIN ${TABLE.POSTS} ON ${TABLE.FOLLOWS}."followeeId" = ${TABLE.POSTS}."userId"
             OR ${TABLE.FOLLOWS}."userId" = ${TABLE.POSTS}."userId"
         JOIN ${TABLE.USERS} ON ${TABLE.POSTS}."userId" = ${TABLE.USERS}.id
-        WHERE ${TABLE.FOLLOWS}."userId" = $1
+		FULL JOIN ${TABLE.REPOSTS} ON posts.id = ${TABLE.REPOSTS}."postId"
+		WHERE ${TABLE.FOLLOWS}."userId" = $1
         GROUP BY ${TABLE.POSTS}.id,
             ${TABLE.USERS}.name,
             ${TABLE.USERS}."imageUrl"
@@ -50,14 +57,18 @@ async function listAllPosts(userId) {
 }
 
 async function selectPostById(id) {
-	//pegar as informações da tabela users
 	return connection.query(
 		`SELECT ${TABLE.POSTS}.*
 			, ${TABLE.USERS}.name
 			, ${TABLE.USERS}."imageUrl"
-		FROM ${TABLE.POSTS}
+			, COUNT(${TABLE.REPOSTS}."postId") AS "repostsAmount"
+			FROM ${TABLE.POSTS}
 		JOIN ${TABLE.USERS} ON ${TABLE.POSTS}."userId" = ${TABLE.USERS}.id
-		WHERE ${TABLE.POSTS}.id = $1;`,
+		FULL JOIN ${TABLE.REPOSTS} ON posts.id = ${TABLE.REPOSTS}."postId"
+		WHERE ${TABLE.POSTS}.id = $1
+		GROUP BY ${TABLE.POSTS}.id,
+			${TABLE.USERS}.name,
+			${TABLE.USERS}."imageUrl";`,
 		[id]
 	);
 }
