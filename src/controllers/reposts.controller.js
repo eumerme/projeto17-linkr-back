@@ -7,7 +7,6 @@ async function createRepost(req, res) {
 
 	try {
 		const postId = Number(id);
-		console.log({ userId, postId });
 
 		await repostsRepository.insertRepost(userId, postId);
 
@@ -18,26 +17,4 @@ async function createRepost(req, res) {
 	}
 }
 
-/* async function listReposts(req, res) {
-	const { postId } = req.body;
-	console.log({postId})
-	try {
-		const {rows: reposts} = await repostsRepository.getReposts(id);
-	console.log({reposts})
-
-		//return res.status(STATUS_CODE.OK).send(result.rows);
-	} catch (error) {
-		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
-	}
-} */
-/*
-const listRepostsById = async (req, res) => {
-	const { data } = res.locals;
-	try {
-		return res.status(STATUS_CODE.OK).send(data[0]);
-	} catch (error) {
-		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
-	}
-};*/
-
-export { createRepost /*  listReposts  */ /* getRepostsById */ };
+export { createRepost };

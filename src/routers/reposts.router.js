@@ -1,8 +1,5 @@
 import { Router } from "express";
-import {
-	createRepost,
-	//listReposts,
-} from "../controllers/reposts.controller.js";
+import { createRepost } from "../controllers/reposts.controller.js";
 import { validatePost } from "../middlewares/posts.middleware.js";
 
 import { tokenValidation } from "../middlewares/token.validation.js";
@@ -16,26 +13,4 @@ repostsRouter.post(
 	createRepost
 );
 
-/* repostsRouter.get(
-	"/timeline/reposts/:id",
-	tokenValidation,
-	//validateExistPost,
-	listReposts
-); */
-
-/* 
-repostsRouter.get(
-	"/timeline/repost/:id",
-	tokenValidation,
-	validateRepostId,
-	getRepostsById
-);
-
-repostsRouter.get(
-	"/timeline/setinterval",
-	tokenValidation,
-	validateFollows,
-	listNewPosts
-);
-*/
 export { repostsRouter };
