@@ -12,9 +12,23 @@ async function createRepost(req, res) {
 
 		return res.sendStatus(STATUS_CODE.OK);
 	} catch (error) {
-		console.log(error.message);
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
 }
 
-export { createRepost };
+async function deleteRepost(req, res) {
+	const { id } = req.params;
+	const { userId } = res.locals;
+
+	try {
+		const postId = Number(id);
+
+		await repostsRepository.deletePostsReposts(userId, postId);
+
+		return res.sendStatus(STATUS_CODE.OK);
+	} catch (error) {
+		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
+	}
+}
+
+export { createRepost, deleteRepost };

@@ -7,7 +7,6 @@ import {
 	updatePost,
 } from "../controllers/posts.controller.js";
 import { tokenValidation } from "../middlewares/token.validation.js";
-//import { validateFollows } from "../middlewares/follows.middleware.js";
 import {
 	schemasValidation,
 	urlValidation,
@@ -19,8 +18,8 @@ import {
 	checkLikes,
 	checkComments,
 	validateRepost,
+	checkReposts,
 } from "../middlewares/posts.middleware.js";
-//import { checkHashtag } from "../middlewares/hashtags.middleware.js";
 
 const postsRouter = Router();
 
@@ -52,6 +51,7 @@ postsRouter.delete(
 	checkHashtag,
 	checkLikes,
 	checkComments,
+	checkReposts,
 	deletePost
 );
 postsRouter.get("/url/:id", tokenValidation, listUserPosts);

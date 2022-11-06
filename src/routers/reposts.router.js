@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { createRepost } from "../controllers/reposts.controller.js";
+import {
+	createRepost,
+	deleteRepost,
+} from "../controllers/reposts.controller.js";
 import { validatePost } from "../middlewares/posts.middleware.js";
 
 import { tokenValidation } from "../middlewares/token.validation.js";
@@ -11,6 +14,13 @@ repostsRouter.post(
 	tokenValidation,
 	validatePost,
 	createRepost
+);
+
+repostsRouter.delete(
+	"/timeline/delete-reposts/:id",
+	tokenValidation,
+	validatePost,
+	deleteRepost
 );
 
 export { repostsRouter };

@@ -91,6 +91,22 @@ async function checkComments(req, res, next) {
 	}
 }
 
+async function checkReposts(req, res, next) {
+	const { id } = req.params;
+
+	try {
+		const { rows: reposts } = await repostsRepository.selectRepost(id);
+		if (reposts.length !== 0) {
+			const { repostBy, postId } = reposts[0];
+			await repostsRepository.deletePostsReposts(repostBy, postId);
+		}
+
+		next();
+	} catch (error) {
+		res.status(STATUS_CODE.SERVER_ERROR);
+	}
+}
+
 async function validateRepost(req, res, next) {
 	const { userId, followSomeone } = res.locals;
 
@@ -136,5 +152,6 @@ export {
 	checkHashtag,
 	checkLikes,
 	checkComments,
+	checkReposts,
 	validateRepost,
 };

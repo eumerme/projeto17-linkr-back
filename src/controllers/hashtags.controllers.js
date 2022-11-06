@@ -57,20 +57,9 @@ async function insertIntoHashtagsPosts(req, res) {
 	}
 }
 
-/* async function insertIntoHashtagsPostsEdit(req, res) {
-	console.log("entrou insert edit post");
-
-	try {
-		return res.sendStatus(STATUS_CODE.OK);
-	} catch (error) {
-		res.status(STATUS_CODE.SERVER_ERROR);
-	}
-} */
-
 export {
 	listPostHashtag,
 	listHashtags,
 	createHashtag,
 	insertIntoHashtagsPosts,
-	//insertIntoHashtagsPostsEdit,
 };

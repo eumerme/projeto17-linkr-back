@@ -42,4 +42,29 @@ async function getAllReposts(userId) {
 	);
 }
 
-export { insertRepost, getUserReposts, getAllReposts };
+async function selectRepost(id) {
+	return connection.query(
+		`SELECT ${TABLE.REPOSTS}."repostBy" 
+			, ${TABLE.REPOSTS}."postId"
+		FROM ${TABLE.REPOSTS}
+		JOIN ${TABLE.POSTS} ON ${TABLE.POSTS}.id = ${TABLE.REPOSTS}."postId"
+		WHERE ${TABLE.REPOSTS}."postId" = $1;`,
+		[id]
+	);
+}
+
+async function deletePostsReposts(repostBy, postId) {
+	return connection.query(
+		`DELETE FROM ${TABLE.REPOSTS}
+		WHERE ${TABLE.REPOSTS}."repostBy" = $1 AND ${TABLE.REPOSTS}."postId" = $2;`,
+		[repostBy, postId]
+	);
+}
+
+export {
+	insertRepost,
+	getUserReposts,
+	getAllReposts,
+	selectRepost,
+	deletePostsReposts,
+};

@@ -74,7 +74,6 @@ async function listPosts(req, res) {
 
 		return res.status(STATUS_CODE.OK).send({ followSomeone: true, posts });
 	} catch (error) {
-		console.log(error.message);
 		return res.sendStatus(STATUS_CODE.SERVER_ERROR);
 	}
 }
