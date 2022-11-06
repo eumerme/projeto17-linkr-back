@@ -15,18 +15,18 @@ async function listHashtags() {
 async function listPostbyHashtag(text) {
 	const newText = `%#${text}%`;
 	return connection.query(
-		`SELECT ${TABLE.POSTS}.text
-			, ${TABLE.POSTS}.id
-			, ${TABLE.POSTS}."userId"
-			, ${TABLE.POSTS}.url
-			, ${TABLE.POSTS}."urlTitle"
-			, ${TABLE.POSTS}."urlImage"
-			, ${TABLE.POSTS}."urlDescription"
-			, ${TABLE.USERS}.name
-			, ${TABLE.USERS}."imageUrl"
+		`SELECT ${TABLE.POSTS}.*
+            , ${TABLE.USERS}.name
+            , ${TABLE.USERS}."imageUrl"
+			, JSON_BUILD_OBJECT('isRepost', FALSE) AS repost
+			, COUNT(${TABLE.REPOSTS}."postId") AS "repostsAmount"
 		FROM ${TABLE.POSTS} 
 		JOIN ${TABLE.USERS} ON ${TABLE.POSTS}."userId" = ${TABLE.USERS}.id 
+		FULL JOIN ${TABLE.REPOSTS} ON posts.id = ${TABLE.REPOSTS}."postId"
 		WHERE text LIKE $1 
+		GROUP BY ${TABLE.POSTS}.id,
+            ${TABLE.USERS}.name,
+            ${TABLE.USERS}."imageUrl"
 		ORDER BY ${TABLE.POSTS}."createdAt" DESC;`,
 		[newText]
 	);
