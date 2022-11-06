@@ -22,7 +22,7 @@ async function getUserReposts(userId) {
 	);
 }
 
-async function getAllReposts(userId) {
+async function getAllRepostsFromFollows(userId) {
 	return connection.query(
 		`SELECT ${TABLE.REPOSTS}."repostBy" 
 			, ${TABLE.USERS}.name
@@ -39,6 +39,21 @@ async function getAllReposts(userId) {
 			, ${TABLE.USERS}.name
 		ORDER BY ${TABLE.REPOSTS}."createdAt" DESC;`,
 		[userId]
+	);
+}
+
+async function getAllRepostsFromHashtags(hashtagName) {
+	return connection.query(
+		`SELECT reposts."repostBy" 
+			, users.name
+			, reposts."postId"
+			, reposts."createdAt"
+		FROM reposts
+		JOIN users ON reposts."repostBy" = users.id
+		JOIN "hashtagsPosts" ON reposts."postId" = "hashtagsPosts"."postId"
+		JOIN hashtags ON hashtags.id = "hashtagsPosts"."hashtagId"
+		WHERE hashtags.name = $1;`,
+		[hashtagName]
 	);
 }
 
@@ -64,7 +79,8 @@ async function deletePostsReposts(repostBy, postId) {
 export {
 	insertRepost,
 	getUserReposts,
-	getAllReposts,
+	getAllRepostsFromFollows,
+	getAllRepostsFromHashtags,
 	selectRepost,
 	deletePostsReposts,
 };

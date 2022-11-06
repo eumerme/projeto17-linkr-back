@@ -12,8 +12,7 @@ async function listHashtags() {
 `);
 }
 
-async function listPostbyHashtag(text) {
-	const newText = `%#${text}%`;
+async function listPostbyHashtag(hashtagName) {
 	return connection.query(
 		`SELECT ${TABLE.POSTS}.*
             , ${TABLE.USERS}.name
@@ -28,7 +27,7 @@ async function listPostbyHashtag(text) {
             ${TABLE.USERS}.name,
             ${TABLE.USERS}."imageUrl"
 		ORDER BY ${TABLE.POSTS}."createdAt" DESC;`,
-		[newText]
+		[`%#${hashtagName}%`]
 	);
 }
 

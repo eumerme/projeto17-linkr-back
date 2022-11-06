@@ -13,11 +13,24 @@ async function listHashtags(req, res) {
 
 async function listPostHashtag(req, res) {
 	const { hashtagName } = req.params;
+	const { existRepost, reposts } = res.locals;
 
 	try {
 		const { rows: postsByHashtag } = await hashtagsRepository.listPostbyHashtag(
 			hashtagName
 		);
+
+		if (existRepost) {
+			const posts = [...reposts, ...postsByHashtag];
+			await Promise.all(
+				posts.sort(
+					(a, b) =>
+						new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+				)
+			);
+			return res.status(STATUS_CODE.OK).send(posts);
+		}
+
 		return res.status(STATUS_CODE.OK).send(postsByHashtag);
 	} catch (error) {
 		return res.status(STATUS_CODE.SERVER_ERROR);

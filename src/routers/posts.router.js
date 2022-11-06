@@ -17,9 +17,10 @@ import {
 	checkHashtag,
 	checkLikes,
 	checkComments,
-	validateRepost,
+	//validateRepost,
 	checkReposts,
 } from "../middlewares/posts.middleware.js";
+import { validateRepost } from "../middlewares/reposts.middleware.js";
 
 const postsRouter = Router();
 
@@ -54,6 +55,6 @@ postsRouter.delete(
 	checkReposts,
 	deletePost
 );
-postsRouter.get("/url/:id", tokenValidation, listUserPosts);
+postsRouter.get("/url/:id", tokenValidation, validateRepost, listUserPosts);
 
 export { postsRouter };

@@ -107,45 +107,6 @@ async function checkReposts(req, res, next) {
 	}
 }
 
-async function validateRepost(req, res, next) {
-	const { userId, followSomeone } = res.locals;
-
-	try {
-		let reposts;
-
-		if (followSomeone === false) {
-			reposts = (await repostsRepository.getUserReposts(userId)).rows;
-		} else {
-			reposts = (await repostsRepository.getAllReposts(userId)).rows;
-		}
-
-		if (reposts.length !== 0) {
-			const allReposts = [];
-			await Promise.all(
-				reposts.map(async (value) => {
-					const post = (await postsRepository.selectPostById(value.postId))
-						.rows[0];
-					post.createdAt = value.createdAt;
-					post.repost = {
-						isRepost: true,
-						repostedById: value.repostBy,
-						repostedByName: value.name,
-					};
-
-					allReposts.push(post);
-				})
-			);
-
-			res.locals.existRepost = true;
-			res.locals.reposts = allReposts;
-		}
-
-		next();
-	} catch (error) {
-		res.status(STATUS_CODE.SERVER_ERROR);
-	}
-}
-
 export {
 	validatePost,
 	checkFollows,
@@ -153,5 +114,4 @@ export {
 	checkLikes,
 	checkComments,
 	checkReposts,
-	validateRepost,
 };
