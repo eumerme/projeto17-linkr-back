@@ -18,9 +18,6 @@ const schemas = {
 	editComment: Joi.object().keys({
 		comment: Joi.string().trim().required(),
 	}),
-	/* paramsId: Joi.object().keys({
-		id: Joi.number().positive().integer(),
-	}), */
 };
 
 export { schemas };

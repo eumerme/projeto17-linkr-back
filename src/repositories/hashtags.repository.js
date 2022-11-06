@@ -88,13 +88,6 @@ async function deleteHashtag(id) {
 	return connection.query(`DELETE FROM ${TABLE.HASHTAGS} WHERE id = $1;`, [id]);
 }
 
-/* async function selectPostContainsHashtag(postId, hashtagId) {
-	return connection.query(
-		`SELECT * FROM "hashtagsPosts" WHERE "postId" = $1 AND "hashtagId" = $2;`,
-		[postId, hashtagId]
-	);
-} */
-
 export {
 	listPostbyHashtag,
 	listHashtags,
@@ -105,5 +98,4 @@ export {
 	selectHashtagByName,
 	deleteHashtagsPosts,
 	deleteHashtag,
-	/* 	selectPostContainsHashtag, */
 };

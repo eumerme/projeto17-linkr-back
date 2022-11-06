@@ -18,13 +18,6 @@ hashtagsRouter.post(
 	tokenValidation,
 	createHashtag,
 	insertIntoHashtagsPosts
-); /* 
-hashtagsRouter.post(
-	"/hashtags-editpost",
-	tokenValidation,
-	checkHashtagPost,
-	createHashtag,
-	insertIntoHashtagsPostsEdit
-); */
+);
 
 export { hashtagsRouter };
