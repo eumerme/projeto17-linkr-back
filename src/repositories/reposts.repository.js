@@ -44,15 +44,15 @@ async function getAllRepostsFromFollows(userId) {
 
 async function getAllRepostsFromHashtags(hashtagName) {
 	return connection.query(
-		`SELECT reposts."repostBy" 
-			, users.name
-			, reposts."postId"
-			, reposts."createdAt"
-		FROM reposts
-		JOIN users ON reposts."repostBy" = users.id
-		JOIN "hashtagsPosts" ON reposts."postId" = "hashtagsPosts"."postId"
-		JOIN hashtags ON hashtags.id = "hashtagsPosts"."hashtagId"
-		WHERE hashtags.name = $1;`,
+		`SELECT ${TABLE.REPOSTS}."repostBy" 
+			, ${TABLE.USERS}.name
+			, ${TABLE.REPOSTS}."postId"
+			, ${TABLE.REPOSTS}."createdAt"
+		FROM ${TABLE.REPOSTS}
+		JOIN ${TABLE.USERS} ON ${TABLE.REPOSTS}."repostBy" = ${TABLE.USERS}.id
+		JOIN "${TABLE.HASHTAGSPOSTS}" ON ${TABLE.REPOSTS}."postId" = "${TABLE.HASHTAGSPOSTS}"."postId"
+		JOIN ${TABLE.HASHTAGS} ON ${TABLE.HASHTAGS}.id = "${TABLE.HASHTAGSPOSTS}"."hashtagId"
+		WHERE ${TABLE.HASHTAGS}.name = $1;`,
 		[hashtagName]
 	);
 }

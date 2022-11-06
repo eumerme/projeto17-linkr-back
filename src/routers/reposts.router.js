@@ -4,7 +4,6 @@ import {
 	deleteRepost,
 } from "../controllers/reposts.controller.js";
 import { validatePost } from "../middlewares/posts.middleware.js";
-
 import { tokenValidation } from "../middlewares/token.validation.js";
 
 const repostsRouter = Router();
