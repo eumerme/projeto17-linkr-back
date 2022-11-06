@@ -13,7 +13,6 @@ async function listPost(userId) {
     `SELECT posts.text,
 			posts.id, 
 			posts."userId",
-      posts."repostBy",
 			posts.url,
       posts."createdAt",
 			users.name,
@@ -57,21 +56,17 @@ async function editPostText(comment, id) {
 }
 
 async function deleteFatalPost(id) {
-
-  connection.query(`DELETE FROM ${TABLE.LIKES} WHERE "postId" = $1;`, [id]);
-  const result = (await connection.query(`
-    SELECT * FROM ${TABLE.POSTS} WHERE id = $1;
-  `, [id])).rows[0];
-  connection.query(`DELETE FROM ${TABLE.POSTS} WHERE id = $1;`, [id]);
-
-  return result.repostBy;
+  await connection.query(`DELETE FROM ${TABLE.LIKES} WHERE "postId" = $1`, [id]); 
+  await connection.query(`DELETE FROM ${TABLE.COMMENTS} WHERE "postId" = $1`, [id]); 
+  await connection.query(`DELETE FROM ${TABLE.REPOSTS} WHERE "postId" = $1`, [id]); 
+  await connection.query(`DELETE FROM ${TABLE.POSTS} WHERE id = $1;`, [id]);
 }
 
 async function deteleRepost(id){
   return connection.query(`
-    DELETE FROM reposts WHERE id = $1;`
+    DELETE FROM ${TABLE.REPOSTS} WHERE id = $1;`
   , [id]);
-}
+};
 
 async function likes(id) {
   return connection.query(
@@ -92,8 +87,8 @@ async function getUserPosts(id) {
     `SELECT posts.text,
 			posts.id, 
 			posts."userId",
-      posts."repostBy",
 			posts.url,
+      posts."createdAt",
 			users.name,
 			users."imageUrl"
 		FROM posts
@@ -147,33 +142,15 @@ async function listUserNotFollowing() {
 }
 
 async function createNewRepost(postId, userId){
-
-  await connection.query(
+  return connection.query(
     `INSERT INTO ${TABLE.REPOSTS} ("userId", "postId") VALUES ($1, $2);`
   , [userId, postId]);
-
-  const result = (await connection.query(`
-    SELECT reposts.id AS "repostId",
-    reposts."userId",
-    posts.id,
-    posts.text,
-    posts.url,
-    users.name
-    FROM reposts 
-    JOIN posts ON posts.id=reposts."postId"
-    JOIN users on posts."userId"=users.id
-    WHERE reposts.id = (SELECT MAX(reposts.id) FROM reposts);
-  `)).rows[0];
-  
-  connection.query(`
-    INSERT INTO ${TABLE.POSTS} ("userId", text, url, "repostBy") VALUES ($1, $2, $3, $4);`
-  , [result.userId, result.text, result.url, result.repostId]);
 };
 
 async function countReposts(id){
   return connection.query(
     `SELECT COUNT("postId") AS "countReposts"
-      FROM reposts 
+      FROM ${TABLE.REPOSTS} 
       WHERE "postId" = $1;`
   , [id]);
 };
@@ -185,6 +162,44 @@ async function listPostInterval(limit) {
   );
 }
 
+async function getUserReposts(id){
+  return connection.query(`
+    SELECT reposts.*, 
+    "u1".name AS "nameRepost",
+    "u1"."imageUrl" AS "imageUrl",
+    posts.text,
+    posts."userId" AS "userPost",
+    posts.url,
+    "u2".name AS "namePost"
+    FROM reposts
+    JOIN users "u1" ON reposts."userId"="u1".id
+    JOIN posts ON reposts."postId"=posts.id
+    JOIN users "u2" ON posts."userId"="u2".id
+    WHERE "u1".id = $1
+    ORDER BY reposts."createdAt" DESC;
+  `, [id]);
+}
+
+
+async function getListRepost(id){
+  return connection.query(`
+    SELECT reposts.*, 
+    "u1".name AS "nameRepost",
+    "u1"."imageUrl" AS "imageUrl",
+    posts.text,
+    posts."userId" AS "userPost",
+    posts.url,
+    "u2".name AS "namePost"
+    FROM follows 
+    JOIN reposts ON follows."followeeId" = reposts."userId"
+    OR follows."userId" = reposts."userId"
+    JOIN users "u1" ON reposts."userId"="u1".id
+    JOIN posts ON reposts."postId"=posts.id
+    JOIN users "u2" ON posts."userId"="u2".id
+    WHERE "u1".id = $1
+    ORDER BY reposts."createdAt" DESC;
+  `, [id]);
+};
 
 export {
   publishNewPost,
@@ -202,5 +217,7 @@ export {
   countReposts,
   listUserFollowing,
   listUserNotFollowing,
-  deteleRepost
+  deteleRepost,
+  getUserReposts,
+  getListRepost
 };
