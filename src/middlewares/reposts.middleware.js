@@ -8,7 +8,7 @@ async function validateRepost(req, res, next) {
 	try {
 		let reposts;
 
-		if (path === "/timeline/posts") {
+		if (path === "/posts") {
 			const { userId, followSomeone } = res.locals;
 			if (followSomeone === false) {
 				reposts = (await repostsRepository.getUserReposts(userId)).rows;

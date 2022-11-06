@@ -6,7 +6,7 @@ async function urlValidation(req, res, next) {
 	let url;
 
 	if (path === "/sign-up") url = req.body.imageUrl;
-	if (path === "/timeline/publish") url = req.body.url;
+	if (path === "/publish") url = req.body.url;
 
 	const validUrl =
 		url.substring(0, 7) === "http://" || url.substring(0, 8) === "https://";
@@ -35,13 +35,13 @@ async function schemasValidation(req, res, next) {
 		});
 	}
 
-	if (path === "/timeline/publish") {
+	if (path === "/publish") {
 		result = schemas.publish.validate(req.body, {
 			abortEarly: false,
 		});
 	}
 
-	if (path === "/timeline/posts/update/:id") {
+	if (path === "/posts/update/:id") {
 		result = schemas.editComment.validate(req.body);
 	}
 

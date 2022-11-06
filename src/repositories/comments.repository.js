@@ -15,6 +15,7 @@ async function listPostComments(postId) {
 			, ${TABLE.USERS}."imageUrl"
 			, ${TABLE.POSTS}."userId" AS "postUserId"
 			, ${TABLE.COMMENTS}.comment
+			, ${TABLE.COMMENTS}.id
 			, ${TABLE.COMMENTS}."userId" AS "commentUserId"
 		FROM ${TABLE.COMMENTS} 
 		JOIN ${TABLE.USERS} ON ${TABLE.USERS}.id = ${TABLE.COMMENTS}."userId" 
@@ -44,9 +45,17 @@ async function deletePostsComments(userId, postId) {
 	);
 }
 
+async function deletePostComment(commentId) {
+	return connection.query(
+		`DELETE FROM ${TABLE.COMMENTS} WHERE ${TABLE.COMMENTS}.id = $1;`,
+		[commentId]
+	);
+}
+
 export {
 	insertNewComment,
 	listPostComments,
 	selectComments,
 	deletePostsComments,
+	deletePostComment,
 };

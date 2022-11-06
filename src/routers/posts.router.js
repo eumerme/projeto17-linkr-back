@@ -17,7 +17,6 @@ import {
 	checkHashtag,
 	checkLikes,
 	checkComments,
-	//validateRepost,
 	checkReposts,
 } from "../middlewares/posts.middleware.js";
 import { validateRepost } from "../middlewares/reposts.middleware.js";
@@ -25,28 +24,28 @@ import { validateRepost } from "../middlewares/reposts.middleware.js";
 const postsRouter = Router();
 
 postsRouter.post(
-	"/timeline/publish",
+	"/publish",
 	tokenValidation,
 	schemasValidation,
 	urlValidation,
 	publishPost
 );
 postsRouter.patch(
-	"/timeline/posts/update/:id",
+	"/posts/update/:id",
 	tokenValidation,
 	schemasValidation,
 	validatePost,
 	updatePost
 );
 postsRouter.get(
-	"/timeline/posts",
+	"/posts",
 	tokenValidation,
 	checkFollows,
 	validateRepost,
 	listPosts
 );
 postsRouter.delete(
-	"/timeline/posts/delete/:id",
+	"/posts/delete/:id",
 	tokenValidation,
 	validatePost,
 	checkHashtag,

@@ -25,4 +25,15 @@ async function listComments(req, res) {
 	}
 }
 
-export { insertComment, listComments };
+async function deleteComment(req, res, next) {
+	const { commentId } = req.params;
+
+	try {
+		await commentsRepository.deletePostComment(commentId);
+		return res.sendStatus(STATUS_CODE.OK);
+	} catch (error) {
+		res.status(STATUS_CODE.SERVER_ERROR);
+	}
+}
+
+export { insertComment, listComments, deleteComment };

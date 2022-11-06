@@ -6,12 +6,7 @@ import { tokenValidation } from "../middlewares/token.validation.js";
 
 const likesRouter = Router();
 
-likesRouter.post("/timeline/like", tokenValidation, likeDislike);
-likesRouter.get(
-	"/timeline/postsLikes/:id",
-	tokenValidation,
-	validatePost,
-	listLikes
-);
+likesRouter.post("/likes", tokenValidation, likeDislike);
+likesRouter.get("/postsLikes/:id", tokenValidation, validatePost, listLikes);
 
 export { likesRouter };
